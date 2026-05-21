@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.husrt.ui.cuenta.CambioClaveController" spacing="14" alignment="CENTER"
+      styleClass="panel-card">
+    <padding><Insets top="24" right="28" bottom="24" left="28"/></padding>
+    <Label text="Cambiar contraseña" styleClass="page-title"/>
+    <Label text="Mínimo 6 caracteres" styleClass="page-subtitle"/>
+    <PasswordField fx:id="claveActual" promptText="Contraseña actual" maxWidth="280" prefWidth="280"/>
+    <PasswordField fx:id="claveNueva" promptText="Nueva contraseña" maxWidth="280" prefWidth="280"/>
+    <PasswordField fx:id="claveConfirmar" promptText="Confirmar nueva contraseña" maxWidth="280" prefWidth="280"/>
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="Guardar" onAction="#onGuardar" styleClass="button-primary" defaultButton="true"/>
+        <Button text="Cancelar" onAction="#onCancelar" styleClass="button-secondary"/>
+    </HBox>
+    <Label fx:id="msgCambio" styleClass="message-error" wrapText="true" maxWidth="300"/>
+</VBox>

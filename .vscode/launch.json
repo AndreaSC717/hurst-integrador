@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "HUSRT: App (JavaFX Windows)",
+      "request": "launch",
+      "mainClass": "com.husrt.App",
+      "projectName": "husrt-control",
+      "vmArgs": "--add-modules javafx.base,javafx.graphics,javafx.controls,javafx.fxml"
+    }
+  ]
+}

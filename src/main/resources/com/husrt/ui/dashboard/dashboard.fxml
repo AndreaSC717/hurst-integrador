@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.husrt.ui.dashboard.DashboardController"
+            fitToWidth="true" styleClass="page-scroll" hbarPolicy="NEVER">
+    <VBox styleClass="page-root" spacing="20">
+        <padding><Insets top="4" right="4" bottom="24" left="4"/></padding>
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <VBox spacing="2">
+                <Label text="Dashboard Principal" styleClass="page-title"/>
+                <Label text="Hospital Universitario San Rafael de Tunja — Personal Médico en Formación"
+                       styleClass="page-subtitle"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Actualizar" onAction="#onRefresh" styleClass="button-secondary"/>
+            <Label fx:id="ultimaActualizacion" styleClass="topbar-date"/>
+        </HBox>
+
+        <HBox spacing="16">
+            <VBox styleClass="stat-card stat-card-accent" HBox.hgrow="ALWAYS">
+                <Label fx:id="kpiEstudiantes" text="0" styleClass="stat-value"/>
+                <Label text="Estudiantes activos" styleClass="stat-label"/>
+            </VBox>
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                <Label fx:id="kpiProfesores" text="0" styleClass="stat-value"/>
+                <Label text="Profesores" styleClass="stat-label"/>
+            </VBox>
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                <Label fx:id="kpiPresentes" text="0" styleClass="stat-value"/>
+                <Label text="Presentes ahora" styleClass="stat-label"/>
+                <Label fx:id="kpiPresentesPct" text="0%" styleClass="stat-badge"/>
+            </VBox>
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                <Label fx:id="kpiAlertas" text="0" styleClass="stat-value"/>
+                <Label text="Alertas activas" styleClass="stat-label"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="16">
+            <VBox styleClass="panel-card" prefWidth="280" spacing="8">
+                <Label text="Asistencia de hoy" styleClass="section-title"/>
+                <HBox spacing="24">
+                    <VBox spacing="4">
+                        <Label fx:id="kpiAsistieron" text="0" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #059669;"/>
+                        <Label text="Asistieron" styleClass="stat-label"/>
+                    </VBox>
+                    <VBox spacing="4">
+                        <Label fx:id="kpiRechazos" text="0" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #d97706;"/>
+                        <Label text="Rechazados" styleClass="stat-label"/>
+                    </VBox>
+                </HBox>
+                <Button text="Ver detalles en Control Acceso" onAction="#onIrPorteria" styleClass="button-secondary"/>
+            </VBox>
+            <VBox styleClass="panel-card" HBox.hgrow="ALWAYS" spacing="10">
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Alertas recientes" styleClass="section-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                </HBox>
+                <ListView fx:id="listaAlertas" prefHeight="120"/>
+            </VBox>
+        </HBox>
+
+        <VBox styleClass="panel-card" spacing="12">
+            <Label text="Ocupación por servicio" styleClass="section-title"/>
+            <VBox fx:id="ocupacionBox" spacing="10"/>
+        </VBox>
+
+        <VBox styleClass="panel-card" spacing="10">
+            <Label text="Estudiantes dentro del hospital" styleClass="section-title"/>
+            <TableView fx:id="tablaEstudiantes" prefHeight="180">
+                <columns>
+                    <TableColumn fx:id="colCedula" text="Cédula" prefWidth="110"/>
+                    <TableColumn fx:id="colNombre" text="Nombre" prefWidth="140"/>
+                    <TableColumn fx:id="colApellido" text="Apellido" prefWidth="140"/>
+                    <TableColumn fx:id="colServicio" text="Servicio" prefWidth="160"/>
+                    <TableColumn fx:id="colEntrada" text="Entrada" prefWidth="150"/>
+                </columns>
+            </TableView>
+        </VBox>
+
+        <VBox styleClass="panel-card" spacing="10">
+            <Label text="Docentes dentro" styleClass="section-title"/>
+            <TableView fx:id="tablaDocentes" prefHeight="140">
+                <columns>
+                    <TableColumn fx:id="colDocCedula" text="Cédula" prefWidth="110"/>
+                    <TableColumn fx:id="colDocNombre" text="Nombre" prefWidth="140"/>
+                    <TableColumn fx:id="colDocApellido" text="Apellido" prefWidth="140"/>
+                    <TableColumn fx:id="colDocPlan" text="Plan" prefWidth="70"/>
+                    <TableColumn fx:id="colDocEntrada" text="Entrada" prefWidth="150"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </VBox>
+</ScrollPane>
