@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.control.*?>
+
+<?import javafx.scene.layout.*?>
+
+
+
+<TabPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+
+         fx:controller="com.husrt.ui.admin.AdminController" tabClosingPolicy="UNAVAILABLE"
+
+         styleClass="page-scroll">
+
+    <Tab text="Usuarios">
+
+        <VBox spacing="12" styleClass="panel-card">
+
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+            <Label text="Usuarios del sistema" styleClass="section-title"/>
+
+            <TableView fx:id="tablaUsuarios" prefHeight="200">
+
+                <columns>
+
+                    <TableColumn fx:id="colUid" text="ID" prefWidth="50"/>
+
+                    <TableColumn fx:id="colUname" text="Usuario" prefWidth="160"/>
+
+                    <TableColumn fx:id="colUrol" text="Rol" prefWidth="140"/>
+
+                    <TableColumn fx:id="colUact" text="Activo" prefWidth="70"/>
+
+                </columns>
+
+            </TableView>
+
+            <HBox spacing="8">
+
+                <Button text="Activar" onAction="#onActivar" styleClass="button-outline"/>
+
+                <Button text="Desactivar" onAction="#onDesactivar" styleClass="button-outline"/>
+
+                <Button text="Eliminar" onAction="#onEliminar" styleClass="button-danger"/>
+
+            </HBox>
+
+            <Separator/>
+
+            <Label text="Editar usuario seleccionado" styleClass="section-title"/>
+
+            <HBox spacing="8">
+
+                <ComboBox fx:id="editRol" promptText="Nuevo rol" prefWidth="180"/>
+
+                <Button text="Cambiar rol" onAction="#onCambiarRol" styleClass="button-primary"/>
+
+            </HBox>
+
+            <HBox spacing="8">
+
+                <PasswordField fx:id="resetClave" promptText="Nueva contraseña" prefWidth="200"/>
+
+                <Button text="Restablecer contraseña" onAction="#onRestablecerClave" styleClass="button-outline"/>
+
+            </HBox>
+
+            <Separator/>
+
+            <Label text="Nuevo usuario" styleClass="section-title"/>
+
+            <HBox spacing="8">
+
+                <TextField fx:id="nuUsuario" promptText="usuario" prefWidth="160"/>
+
+                <PasswordField fx:id="nuClave" promptText="contraseña" prefWidth="160"/>
+
+                <ComboBox fx:id="nuRol" prefWidth="180"/>
+
+            </HBox>
+
+            <HBox spacing="8">
+
+                <Label fx:id="lblEstudianteVinculo" text="Estudiante vinculado:" visible="false" managed="false" styleClass="form-label"/>
+
+                <ComboBox fx:id="nuEstudiante" prefWidth="360" promptText="Seleccionar estudiante" visible="false" managed="false"/>
+
+            </HBox>
+
+            <Button text="Crear usuario" onAction="#onCrearUsuario" styleClass="button-primary"/>
+
+            <Label fx:id="msgAdmin" wrapText="true" styleClass="page-subtitle"/>
+
+        </VBox>
+
+    </Tab>
+
+    <Tab text="Auditoría">
+
+        <VBox spacing="12" styleClass="panel-card">
+
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+            <Label text="Registro de auditoría" styleClass="section-title"/>
+
+            <HBox spacing="8">
+
+                <ComboBox fx:id="filtroModulo" prefWidth="160"/>
+
+                <DatePicker fx:id="audDesde"/>
+
+                <DatePicker fx:id="audHasta"/>
+
+                <Button text="Buscar" onAction="#onBuscarAuditoria" styleClass="button-primary"/>
+
+            </HBox>
+
+            <TableView fx:id="tablaAuditoria" prefHeight="320">
+
+                <columns>
+
+                    <TableColumn fx:id="colAudTs" text="Fecha/hora" prefWidth="150"/>
+
+                    <TableColumn fx:id="colAudUser" text="Usuario" prefWidth="120"/>
+
+                    <TableColumn fx:id="colAudMod" text="Módulo" prefWidth="90"/>
+
+                    <TableColumn fx:id="colAudAcc" text="Acción" prefWidth="140"/>
+
+                    <TableColumn fx:id="colAudDet" text="Detalle" prefWidth="280"/>
+
+                </columns>
+
+            </TableView>
+
+            <Label fx:id="msgAuditoria" wrapText="true" styleClass="page-subtitle"/>
+
+        </VBox>
+
+    </Tab>
+
+</TabPane>
+

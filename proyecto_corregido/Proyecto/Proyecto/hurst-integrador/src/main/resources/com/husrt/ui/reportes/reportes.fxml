@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.control.*?>
+
+<?import javafx.scene.layout.*?>
+
+
+
+<ScrollPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+
+            fx:controller="com.husrt.ui.reportes.ReportesController"
+
+            fitToWidth="true" styleClass="page-scroll" hbarPolicy="NEVER">
+
+    <VBox styleClass="page-root" spacing="20">
+
+        <padding><Insets top="4" right="4" bottom="24" left="4"/></padding>
+
+        <VBox spacing="4">
+
+            <Label text="Reportes y Estadísticas" styleClass="page-title"/>
+
+            <Label text="Generar reportes de asistencia, horas, ARL y ocupación" styleClass="page-subtitle"/>
+
+        </VBox>
+
+
+
+        <FlowPane hgap="16" vgap="16" prefWrapLength="900">
+
+            <VBox styleClass="report-card" spacing="10">
+
+                <Label text="Asistencia — Historial por estudiante" styleClass="report-card-title"/>
+
+                <Label text="Exportar registros de acceso por cédula y rango de fechas" styleClass="report-card-desc"/>
+
+                <HBox spacing="8">
+
+                    <TextField fx:id="histCedula" promptText="Cédula" prefWidth="120"/>
+
+                    <DatePicker fx:id="histDesde"/>
+
+                    <DatePicker fx:id="histHasta"/>
+
+                </HBox>
+
+                <Button text="Generar Excel" onAction="#onHistorialExcel" styleClass="button-primary"/>
+
+            </VBox>
+
+
+
+            <VBox styleClass="report-card" spacing="10">
+
+                <Label text="Accesos denegados" styleClass="report-card-title"/>
+
+                <Label text="Intentos rechazados con motivo" styleClass="report-card-desc"/>
+
+                <HBox spacing="8">
+
+                    <DatePicker fx:id="rejDesde"/>
+
+                    <DatePicker fx:id="rejHasta"/>
+
+                </HBox>
+
+                <Button text="Generar Excel" onAction="#onRechazosExcel" styleClass="button-primary"/>
+
+            </VBox>
+
+
+
+            <VBox styleClass="report-card" spacing="10">
+
+                <Label text="Rendimiento por servicio" styleClass="report-card-title"/>
+
+                <Label text="Ocupación histórica por servicio hospitalario" styleClass="report-card-desc"/>
+
+                <HBox spacing="8">
+
+                    <DatePicker fx:id="ocDesde"/>
+
+                    <DatePicker fx:id="ocHasta"/>
+
+                </HBox>
+
+                <Button text="Generar Excel" onAction="#onOcupacionExcel" styleClass="button-primary"/>
+
+            </VBox>
+
+
+
+            <VBox styleClass="report-card" spacing="10">
+
+                <Label text="Horas acumuladas" styleClass="report-card-title"/>
+
+                <Label text="Horas cumplidas vs requeridas por programa" styleClass="report-card-desc"/>
+
+                <HBox spacing="8">
+
+                    <Spinner fx:id="pdfAnio" editable="true" prefWidth="90"/>
+
+                    <Spinner fx:id="pdfPeriodo" editable="true" prefWidth="80"/>
+
+                </HBox>
+
+                <Button text="Generar PDF" onAction="#onHorasPdf" styleClass="button-primary"/>
+
+            </VBox>
+
+
+
+            <VBox styleClass="report-card" spacing="10">
+
+                <Label text="Alertas de ARL" styleClass="report-card-title"/>
+
+                <Label text="Estudiantes con ARL por vencer en 15 días" styleClass="report-card-desc"/>
+
+                <Button text="Generar PDF" onAction="#onArlPdf" styleClass="button-primary"/>
+
+            </VBox>
+
+
+
+            <VBox styleClass="report-card" spacing="10">
+
+                <Label text="Cumplimiento por universidad / programa" styleClass="report-card-title"/>
+
+                <Label text="Porcentaje promedio de horas cumplidas agrupado por universidad y programa académico" styleClass="report-card-desc"/>
+
+                <HBox spacing="8">
+
+                    <Spinner fx:id="cumAnio" editable="true" prefWidth="90"/>
+
+                    <Spinner fx:id="cumPeriodo" editable="true" prefWidth="80"/>
+
+                </HBox>
+
+                <Button text="Generar Excel" onAction="#onCumplimientoExcel" styleClass="button-primary"/>
+
+            </VBox>
+
+        </FlowPane>
+
+
+
+        <Label fx:id="msgReportes" wrapText="true" maxWidth="800"/>
+
+    </VBox>
+
+</ScrollPane>
+

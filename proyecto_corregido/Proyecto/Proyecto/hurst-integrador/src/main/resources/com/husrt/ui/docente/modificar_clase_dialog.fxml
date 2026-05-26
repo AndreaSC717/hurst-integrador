@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.husrt.ui.docente.ModificarClaseDialogController">
+    <content>
+        <VBox spacing="14" style="-fx-padding: 20;">
+            <Label text="Modificar franja horaria" styleClass="page-title"/>
+            <Label fx:id="lblPlanInfo" wrapText="true" styleClass="page-subtitle"/>
+            <Label text="Asignación a modificar:" styleClass="form-label"/>
+            <ComboBox fx:id="cmbAsignacion" maxWidth="Infinity"/>
+            <Label text="Servicio hospitalario:" styleClass="form-label"/>
+            <ComboBox fx:id="cmbServicio" maxWidth="Infinity"/>
+            <HBox spacing="12">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Día de la semana (1=Lun, 7=Dom):" styleClass="form-label"/>
+                    <Spinner fx:id="spDia" editable="true" prefWidth="90"/>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Hora inicio:" styleClass="form-label"/>
+                    <ComboBox fx:id="cmbHoraIni" maxWidth="Infinity"/>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Hora fin:" styleClass="form-label"/>
+                    <ComboBox fx:id="cmbHoraFin" maxWidth="Infinity"/>
+                </VBox>
+            </HBox>
+            <VBox spacing="4">
+                <Label text="Fecha específica (opcional):" styleClass="form-label"/>
+                <DatePicker fx:id="dpFechaEsp" promptText="Vacío = usar día de la semana"/>
+            </VBox>
+            <VBox spacing="4">
+                <Label text="Mensaje para estudiantes:" styleClass="form-label"/>
+                <TextArea fx:id="txtMensaje" promptText="Opcional: aviso de cambio de horario" prefRowCount="3" wrapText="true"/>
+            </VBox>
+            <Label fx:id="lblError" wrapText="true" styleClass="message-error"/>
+        </VBox>
+    </content>
+    <ButtonType buttonData="OK_DONE" text="Guardar y notificar"/>
+    <ButtonType buttonData="CANCEL_CLOSE" text="Cancelar"/>
+</DialogPane>

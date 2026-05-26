@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.control.*?>
+
+<?import javafx.scene.image.ImageView?>
+
+<?import javafx.scene.layout.*?>
+
+
+
+<ScrollPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+
+            fx:controller="com.husrt.ui.estudiante.EstudiantePerfilController"
+
+            fitToWidth="true" hbarPolicy="NEVER" styleClass="page-scroll">
+
+    <VBox styleClass="page-root" spacing="20" maxWidth="720">
+
+        <padding><Insets top="4" right="4" bottom="24" left="4"/></padding>
+
+
+
+        <VBox styleClass="panel-card" spacing="16">
+
+            <HBox spacing="20" alignment="CENTER_LEFT">
+
+                <ImageView fx:id="fotoPreview" fitWidth="88" fitHeight="88" preserveRatio="true" styleClass="profile-photo"/>
+
+                <VBox spacing="6">
+
+                    <Label text="Mi Perfil" styleClass="page-title"/>
+
+                    <Label fx:id="lblNombre" styleClass="section-title"/>
+
+                    <Label fx:id="lblCedula" styleClass="page-subtitle"/>
+
+                </VBox>
+
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+
+                <Button text="Subir foto" onAction="#onSubirFoto" styleClass="button-primary"/>
+
+                <Button text="Quitar foto" onAction="#onQuitarFoto" styleClass="button-danger"/>
+
+                <Label text="La foto es opcional; puede guardar sus datos sin subir una imagen." styleClass="page-subtitle" wrapText="true"/>
+
+            </HBox>
+
+            <Separator/>
+
+            <Label text="Datos personales" styleClass="section-title"/>
+
+            <GridPane hgap="16" vgap="10">
+
+                <columnConstraints>
+
+                    <ColumnConstraints minWidth="110" prefWidth="120"/>
+
+                    <ColumnConstraints hgrow="ALWAYS"/>
+
+                </columnConstraints>
+
+                <Label text="Nombre:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+
+                <TextField fx:id="tfNombre" promptText="Nombre" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="Apellido:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+                <TextField fx:id="tfApellido" promptText="Apellido" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Programa:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+                <TextField fx:id="tfPrograma" promptText="Programa académico" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="Semestre:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+
+                <TextField fx:id="tfSemestre" promptText="Semestre" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+            </GridPane>
+
+            <Separator/>
+
+            <Label text="Información académica" styleClass="section-title"/>
+
+            <GridPane hgap="16" vgap="10">
+
+                <columnConstraints>
+
+                    <ColumnConstraints minWidth="110" prefWidth="120"/>
+
+                    <ColumnConstraints hgrow="ALWAYS"/>
+
+                </columnConstraints>
+
+                <Label text="Universidad:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+
+                <Label fx:id="lblUniversidad" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="Estado:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+                <Label fx:id="lblEstado" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="ARL:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+                <Label fx:id="lblArl" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="Inducción:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+
+                <Label fx:id="lblInduccion" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                <Label text="Inscripción:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+
+                <Label fx:id="lblInscripcion" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+            </GridPane>
+
+            <HBox alignment="CENTER_RIGHT">
+
+                <Button text="Guardar cambios" onAction="#onGuardar" defaultButton="true" styleClass="button-primary"/>
+
+            </HBox>
+
+        </VBox>
+
+
+
+        <VBox styleClass="panel-card" spacing="12">
+
+            <Label text="Avance de práctica (semestre actual)" styleClass="section-title"/>
+
+            <Label fx:id="lblPeriodo" styleClass="page-subtitle"/>
+
+            <ProgressBar fx:id="progressHoras" prefWidth="500" maxWidth="Infinity" styleClass="progress-occupancy"/>
+
+            <Label fx:id="lblHorasResumen" wrapText="true" styleClass="section-title"/>
+
+            <Label fx:id="lblHorasFaltantes" wrapText="true" styleClass="page-subtitle"/>
+
+        </VBox>
+
+
+
+        <VBox styleClass="panel-card" spacing="12">
+
+            <Label text="Accesos recientes (90 días)" styleClass="section-title"/>
+
+            <TableView fx:id="tablaHistorial" prefHeight="200">
+
+                <columns>
+
+                    <TableColumn fx:id="colEntrada" text="Entrada" prefWidth="140"/>
+
+                    <TableColumn fx:id="colSalida" text="Salida" prefWidth="140"/>
+
+                    <TableColumn fx:id="colHoras" text="Horas" prefWidth="70"/>
+
+                    <TableColumn fx:id="colResultado" text="Resultado" prefWidth="100"/>
+
+                </columns>
+
+            </TableView>
+
+        </VBox>
+
+
+
+        <Label fx:id="msgPerfil" wrapText="true" styleClass="page-subtitle"/>
+
+    </VBox>
+
+</ScrollPane>
+

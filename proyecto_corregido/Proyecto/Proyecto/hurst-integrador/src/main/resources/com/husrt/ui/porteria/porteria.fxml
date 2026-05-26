@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.control.*?>
+
+<?import javafx.scene.image.ImageView?>
+
+<?import javafx.scene.layout.*?>
+
+
+
+<ScrollPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+
+            fx:controller="com.husrt.ui.porteria.PorteriaController"
+
+            fitToWidth="true" styleClass="page-scroll" hbarPolicy="NEVER">
+
+    <VBox styleClass="page-root" spacing="20">
+
+        <padding><Insets top="4" right="4" bottom="24" left="4"/></padding>
+
+        <VBox spacing="4">
+
+            <Label text="Control de Acceso" styleClass="page-title"/>
+
+            <Label text="Paso 1: registrar ingreso del docente. Paso 2: validar acceso del estudiante."
+
+                   styleClass="page-subtitle" wrapText="true"/>
+
+        </VBox>
+
+
+
+        <!-- Step 1: Faculty -->
+
+        <VBox styleClass="panel-card" spacing="14">
+
+            <Label text="Paso 1 — Docente responsable (ingreso / salida)" styleClass="section-title"/>
+
+            <Label text="El docente debe registrar ingreso antes de que los estudiantes puedan entrar."
+
+                   style="-fx-text-fill: #64748b; -fx-font-size: 12px;" wrapText="true"/>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+
+                    <Label text="Cédula del docente" style="-fx-font-size: 12px; -fx-text-fill: #64748b;"/>
+
+                    <TextField fx:id="cedulaDocente" promptText="Sin puntos ni espacios" style="-fx-font-size: 15px;"/>
+
+                </VBox>
+
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+
+                    <Label text="Plan de práctica" style="-fx-font-size: 12px; -fx-text-fill: #64748b;"/>
+
+                    <ComboBox fx:id="planCombo" prefWidth="260" maxWidth="Infinity"/>
+
+                </VBox>
+
+            </HBox>
+
+            <HBox spacing="10">
+
+                <Button text="Registrar ingreso docente" onAction="#onDocenteIngreso" styleClass="button-primary"/>
+
+                <Button text="Registrar salida docente" onAction="#onDocenteSalida" styleClass="button-secondary"/>
+
+            </HBox>
+
+            <Label fx:id="resultadoDocente" wrapText="true"
+
+                   style="-fx-font-size: 13px; -fx-font-weight: bold;"/>
+
+        </VBox>
+
+
+
+        <!-- Step 2: Student -->
+
+        <HBox spacing="20" alignment="TOP_LEFT">
+
+            <VBox styleClass="panel-card" spacing="16" prefWidth="420" HBox.hgrow="ALWAYS">
+
+                <Label text="Paso 2 — Validar acceso del estudiante" styleClass="section-title"/>
+
+                <Label text="Cédula del estudiante" style="-fx-text-fill: #64748b; -fx-font-size: 12px;"/>
+
+                <TextField fx:id="cedulaEstudiante" promptText="Sin puntos ni espacios" style="-fx-font-size: 16px;"/>
+
+                <HBox spacing="10">
+
+                    <Button text="VALIDAR INGRESO" onAction="#onIngresoEstudiante"
+
+                            styleClass="button-primary" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+
+                    <Button text="Registrar salida" onAction="#onSalidaEstudiante" styleClass="button-secondary"/>
+
+                </HBox>
+
+                <Label fx:id="resultadoEstudiante" wrapText="true"
+
+                       style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+                <HBox spacing="16" alignment="CENTER_LEFT">
+
+                    <ImageView fx:id="fotoEstudiante" fitWidth="100" fitHeight="100" preserveRatio="true"
+
+                               visible="false" managed="false"
+
+                               style="-fx-border-color: #e2e8f0; -fx-border-width: 1; -fx-border-radius: 8;"/>
+
+                    <Label fx:id="nombreEstudiante" wrapText="true"
+
+                           style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0d3b66;"/>
+
+                </HBox>
+
+            </VBox>
+
+
+
+            <VBox styleClass="panel-card" spacing="12" prefWidth="380">
+
+                <Label text="Validaciones recientes" styleClass="section-title"/>
+
+                <ListView fx:id="listaValidaciones" prefHeight="260"/>
+
+            </VBox>
+
+        </HBox>
+
+    </VBox>
+
+</ScrollPane>
+
