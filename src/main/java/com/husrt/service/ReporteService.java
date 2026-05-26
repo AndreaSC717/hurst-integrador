@@ -8,16 +8,22 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.husrt.model.Estudiante;
+import com.husrt.model.ResultadoValidacion;
+import com.husrt.model.Universidad;
 import com.husrt.repository.EstudianteRepository;
 import com.husrt.repository.ProgramaRequisitoRepository;
 import com.husrt.repository.RegistroAccesoRepository;
+import com.husrt.repository.UniversidadRepository;
 import com.husrt.util.PeriodoAcademico;
 import com.lowagie.text.Document;
 import com.lowagie.text.FontFactory;
@@ -30,6 +36,7 @@ public class ReporteService {
     private final RegistroAccesoRepository registros = new RegistroAccesoRepository();
     private final EstudianteRepository estudiantes = new EstudianteRepository();
     private final ProgramaRequisitoRepository requisitos = new ProgramaRequisitoRepository();
+    private final UniversidadRepository universidades = new UniversidadRepository();
 
     public List<RegistroAccesoRepository.HistorialRow> historialEstudiante(long idEstudiante, LocalDate desde, LocalDate hasta) throws SQLException {
         LocalDateTime d0 = desde.atStartOfDay();
@@ -52,6 +59,67 @@ public class ReporteService {
         return out;
     }
 
+    public record CumplimientoGrupoRow(
+            String universidad,
+            String programa,
+            int numEstudiantes,
+            double horasCumplidas,
+            int horasRequeridas,
+            double pctPromedio) {
+    }
+
+    public List<CumplimientoGrupoRow> cumplimientoPorGrupo(int anio, int periodo) throws SQLException {
+        Map<Long, String> univNombres = universidades.findAll().stream()
+                .collect(Collectors.toMap(Universidad::idUniversidad, Universidad::nombre));
+
+        Map<String, Long> cedulaToUnivId = estudiantes.findAll().stream()
+                .collect(Collectors.toMap(Estudiante::cedula, Estudiante::idUniversidad));
+
+        List<HorasVsRequeridas> porEstudiante = horasVsRequeridasTodos(anio, periodo);
+
+        record Acum(String univ, String prog, List<HorasVsRequeridas> items) {}
+        Map<String, List<HorasVsRequeridas>> grupos = new LinkedHashMap<>();
+        Map<String, String> keyToUniv = new LinkedHashMap<>();
+        Map<String, String> keyToProg = new LinkedHashMap<>();
+
+        for (HorasVsRequeridas hvr : porEstudiante) {
+            Long univId = cedulaToUnivId.get(hvr.cedula());
+            String univ = univId != null ? univNombres.getOrDefault(univId, "Desconocida") : "Desconocida";
+            String key = univ + "||" + hvr.programa();
+            grupos.computeIfAbsent(key, k -> new ArrayList<>()).add(hvr);
+            keyToUniv.put(key, univ);
+            keyToProg.put(key, hvr.programa());
+        }
+
+        List<CumplimientoGrupoRow> result = new ArrayList<>();
+        for (Map.Entry<String, List<HorasVsRequeridas>> entry : grupos.entrySet()) {
+            List<HorasVsRequeridas> items = entry.getValue();
+            String univ = keyToUniv.get(entry.getKey());
+            String prog = keyToProg.get(entry.getKey());
+            double totalHoras = items.stream().mapToDouble(HorasVsRequeridas::horasCumplidas).sum();
+            int totalReq = items.stream().mapToInt(HorasVsRequeridas::horasRequeridas).sum();
+            double pctProm = items.stream().mapToDouble(HorasVsRequeridas::pct).average().orElse(0);
+            result.add(new CumplimientoGrupoRow(univ, prog, items.size(), totalHoras, totalReq, pctProm));
+        }
+        return result;
+    }
+
+    public void exportCumplimientoExcel(int anio, int periodo, Path out) throws SQLException, IOException {
+        List<CumplimientoGrupoRow> rows = cumplimientoPorGrupo(anio, periodo);
+        List<String> headers = List.of("Universidad", "Programa", "Estudiantes", "Horas cumplidas", "Horas requeridas", "Prom. %");
+        List<List<String>> data = new ArrayList<>();
+        for (CumplimientoGrupoRow r : rows) {
+            data.add(List.of(
+                    r.universidad(),
+                    r.programa(),
+                    String.valueOf(r.numEstudiantes()),
+                    String.format("%.1f", r.horasCumplidas()),
+                    String.valueOf(r.horasRequeridas()),
+                    String.format("%.1f%%", r.pctPromedio())));
+        }
+        writeExcel(headers, data, out);
+    }
+
     public List<RegistroAccesoRepository.RechazoRow> intentosRechazados(LocalDate desde, LocalDate hasta) throws SQLException {
         return registros.listRechazados(desde.atStartOfDay(), hasta.plusDays(1).atStartOfDay());
     }
@@ -66,7 +134,7 @@ public class ReporteService {
 
     public void exportHistorialExcel(long idEstudiante, LocalDate desde, LocalDate hasta, Path out) throws SQLException, IOException {
         List<RegistroAccesoRepository.HistorialRow> rows = historialEstudiante(idEstudiante, desde, hasta);
-        List<String> headers = List.of("ID", "Cédula", "Nombre", "Entrada", "Salida", "Horas", "Resultado", "Motivo");
+        List<String> headers = List.of("ID", "Cédula", "Nombre", "Ingreso", "Salida", "Horas", "Resultado", "Motivo");
         List<List<String>> data = new ArrayList<>();
         for (RegistroAccesoRepository.HistorialRow r : rows) {
             data.add(List.of(
@@ -76,7 +144,7 @@ public class ReporteService {
                     String.valueOf(r.entrada()),
                     String.valueOf(r.salida()),
                     r.horas() != null ? String.valueOf(r.horas()) : "",
-                    r.resultado(),
+                    r.resultado() != null ? ResultadoValidacion.labelFromDb(r.resultado()) : "",
                     r.motivo() != null ? r.motivo() : ""));
         }
         writeExcel(headers, data, out);
@@ -141,7 +209,7 @@ public class ReporteService {
             table.addCell("Cédula");
             table.addCell("Nombre");
             table.addCell("Apellido");
-            table.addCell("ARL fin");
+            table.addCell("Fin ARL");
             for (EstudianteRepository.ArlAlertaRow r : rows) {
                 table.addCell(r.cedula());
                 table.addCell(r.nombre());

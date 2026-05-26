@@ -8,39 +8,44 @@
             fx:controller="com.husrt.ui.shell.MainShellController" fx:id="root"
             styleClass="shell-root" prefWidth="1280" prefHeight="720">
     <left>
-        <VBox styleClass="sidebar" spacing="4">
-            <VBox styleClass="sidebar-logo-wrap" spacing="6">
-                <ImageView fx:id="sidebarLogo" fitWidth="210" preserveRatio="true"
-                           pickOnBounds="true" smooth="true"/>
+        <VBox styleClass="sidebar" spacing="0">
+            <VBox styleClass="logo-side" spacing="10">
+                <VBox styleClass="sidebar-logo-frame" alignment="CENTER">
+                    <ImageView fx:id="sidebarLogo" fitWidth="110" preserveRatio="true"
+                               pickOnBounds="true" smooth="true"/>
+                </VBox>
                 <Label text="HUSRT-Control" styleClass="sidebar-app-name"/>
+                <Label text="Hospital San Rafael de Tunja" styleClass="sidebar-hospital-sub"/>
             </VBox>
-            <Region styleClass="sidebar-divider" prefHeight="1" maxHeight="1"/>
-            <Button fx:id="navDashboard" text="  Dashboard" onAction="#openDashboard" styleClass="nav-button"/>
-            <Button fx:id="navEstudiantes" text="  Estudiantes" onAction="#openEstudiantes" styleClass="nav-button"/>
-            <Button fx:id="navProfesores" text="  Profesores" onAction="#openProfesores" styleClass="nav-button"/>
-            <Button fx:id="navRotaciones" text="  Rotaciones" onAction="#openRotaciones" styleClass="nav-button"/>
-            <Button fx:id="navPorteria" text="  Control Acceso" onAction="#openPorteria" styleClass="nav-button"/>
-            <Button fx:id="navReportes" text="  Reportes" onAction="#openReportes" styleClass="nav-button"/>
-            <Button fx:id="navCoord" text="  Coordinación" onAction="#openCoordinacion" styleClass="nav-button"/>
-            <Button fx:id="navAdmin" text="  Administración" onAction="#openAdmin" styleClass="nav-button"/>
-            <Button fx:id="navPerfil" text="  Mi perfil" onAction="#openPerfil" styleClass="nav-button"/>
+            <VBox styleClass="nav-menu" spacing="4">
+                <padding><Insets top="10" right="0" bottom="0" left="0"/></padding>
+                <Button fx:id="navDashboard" text="▣  Dashboard" onAction="#openDashboard" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="navCoordinacion" text="☰  Coordinación" onAction="#openCoordinacion" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="navEstudiantes" text="🎓  Estudiantes" onAction="#openEstudiantes" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="navDocente" text="👨‍🏫  Panel Docente" onAction="#openDocente" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="navPorteria" text="🔐  Portería" onAction="#openPorteria" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="navReportes" text="📊  Reportes" onAction="#openReportes" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="navAdmin" text="⚙  Administración" onAction="#openAdmin" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="navPerfil" text="🪪  Mi perfil" onAction="#openPerfil" styleClass="nav-button" maxWidth="Infinity"/>
+            </VBox>
             <Region VBox.vgrow="ALWAYS"/>
-            <VBox styleClass="sidebar-user-box" spacing="4">
-                <Label fx:id="lblSidebarUser" styleClass="sidebar-user-name"/>
-                <Label fx:id="lblSidebarRole" styleClass="sidebar-user-role"/>
-            </VBox>
-            <Button text="Cerrar sesión" onAction="#onLogout" styleClass="button-logout-sidebar"
-                    maxWidth="Infinity"/>
+            <HBox styleClass="user-panel" alignment="CENTER_LEFT" spacing="12">
+                <Label fx:id="lblAvatar" styleClass="avatar-small" text="US"/>
+                <VBox spacing="3">
+                    <Label fx:id="lblSidebarUser" styleClass="sidebar-user-name"/>
+                    <Label fx:id="lblSidebarRole" styleClass="sidebar-user-role"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Salir" onAction="#onLogout" styleClass="button-logout-sidebar"/>
+            </HBox>
         </VBox>
     </left>
     <top>
         <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
-            <VBox spacing="2">
-                <Label fx:id="lblPageTitle" text="Dashboard Principal" styleClass="topbar-title"/>
-                <Label fx:id="lblPageDate" styleClass="topbar-date"/>
-            </VBox>
+            <Label fx:id="lblPageTitle" text="Dashboard" styleClass="topbar-title"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button text="Cambiar clave" onAction="#openCambioClave" styleClass="button-secondary"/>
+            <Label fx:id="lblPageDate" styleClass="topbar-date"/>
+            <Button text="Cambiar contraseña" onAction="#openCambioClave" styleClass="button-outline"/>
         </HBox>
     </top>
     <center>

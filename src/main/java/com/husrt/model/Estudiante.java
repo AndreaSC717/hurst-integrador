@@ -15,6 +15,12 @@ public record Estudiante(
         LocalDate fechaInduccion,
         LocalDate arlInicio,
         LocalDate arlFin,
-        EstadoEstudiante estado
-) {
+        EstadoEstudiante estado,
+        boolean vacunasCompletas
+        ) {
+
+    @Override
+    public String toString() {
+        return nombre + " " + apellido;
+    }
 }

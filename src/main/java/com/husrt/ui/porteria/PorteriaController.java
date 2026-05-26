@@ -64,22 +64,14 @@ public class PorteriaController {
             @Override
             protected void updateItem(PlanPracticas item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText("ID " + item.idPlan() + " — " + item.semestre() + " (" + item.anio() + "-" + item.periodo() + " mes " + item.mes() + ")");
-                }
+                setText(empty || item == null ? null : item.toString());
             }
         });
         planCombo.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(PlanPracticas item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText("ID " + item.idPlan() + " — " + item.semestre());
-                }
+                setText(empty || item == null ? null : item.toString());
             }
         });
         reloadPlanes();
@@ -108,7 +100,7 @@ public class PorteriaController {
                 planCombo.getSelectionModel().selectFirst();
             }
         } catch (SQLException e) {
-            resultadoDocente.setText("Error cargando planes: " + e.getMessage());
+            resultadoDocente.setText("Error al cargar planes: " + e.getMessage());
         }
     }
 
@@ -117,14 +109,22 @@ public class PorteriaController {
         resultadoEstudiante.setText("");
         try {
             String cedula = cedulaEstudiante.getText().trim();
+            if (cedula.isEmpty()) {
+                setLabelError(resultadoEstudiante, "Ingrese la cédula.");
+                return;
+            }
             AccesoService.ResultadoIngreso r = acceso.intentarIngresoEstudiante(cedula);
-            resultadoEstudiante.setText(r.mensaje());
+            if (r.permitido()) {
+                setLabelOk(resultadoEstudiante, "INGRESO AUTORIZADO — " + r.mensaje());
+            } else {
+                setLabelError(resultadoEstudiante, "ACCESO DENEGADO — " + r.mensaje());
+            }
             auditoria.registrar("PORTERIA", "INGRESO_ESTUDIANTE",
                     "cedula=" + cedula + ", permitido=" + r.permitido() + ", msg=" + r.mensaje(), cedula);
             mostrarDatosEstudiante(cedula);
             cargarValidaciones();
         } catch (SQLException e) {
-            resultadoEstudiante.setText("Error: " + e.getMessage());
+            setLabelError(resultadoEstudiante, "Error de BD: " + e.getMessage());
             limpiarVistaEstudiante();
         }
     }
@@ -134,13 +134,17 @@ public class PorteriaController {
         resultadoEstudiante.setText("");
         try {
             String cedula = cedulaEstudiante.getText().trim();
+            if (cedula.isEmpty()) {
+                setLabelError(resultadoEstudiante, "Ingrese la cédula.");
+                return;
+            }
             String msg = acceso.registrarSalidaEstudiante(cedula);
-            resultadoEstudiante.setText(msg);
+            setLabelOk(resultadoEstudiante, msg);
             auditoria.registrar("PORTERIA", "SALIDA_ESTUDIANTE", "cedula=" + cedula + ", msg=" + msg, cedula);
             mostrarDatosEstudiante(cedula);
             cargarValidaciones();
         } catch (SQLException e) {
-            resultadoEstudiante.setText("Error: " + e.getMessage());
+            setLabelError(resultadoEstudiante, "Error de BD: " + e.getMessage());
             limpiarVistaEstudiante();
         }
     }
@@ -177,17 +181,25 @@ public class PorteriaController {
         resultadoDocente.setText("");
         PlanPracticas p = planCombo.getSelectionModel().getSelectedItem();
         if (p == null) {
-            resultadoDocente.setText("Seleccione un plan.");
+            setLabelError(resultadoDocente, "Seleccione un plan.");
             return;
         }
         try {
             String cedula = cedulaDocente.getText().trim();
+            if (cedula.isEmpty()) {
+                setLabelError(resultadoDocente, "Ingrese la cédula del docente.");
+                return;
+            }
             String msg = acceso.docenteEntrada(cedula, p.idPlan());
-            resultadoDocente.setText(msg);
+            if (msg.startsWith("Ingreso de docente registrado")) {
+                setLabelOk(resultadoDocente, msg);
+            } else {
+                setLabelError(resultadoDocente, msg);
+            }
             auditoria.registrar("PORTERIA", "INGRESO_DOCENTE",
                     "cedula=" + cedula + ", plan=" + p.idPlan() + ", msg=" + msg, cedula);
         } catch (SQLException e) {
-            resultadoDocente.setText("Error: " + e.getMessage());
+            setLabelError(resultadoDocente, "Error de BD: " + e.getMessage());
         }
     }
 
@@ -196,17 +208,35 @@ public class PorteriaController {
         resultadoDocente.setText("");
         PlanPracticas p = planCombo.getSelectionModel().getSelectedItem();
         if (p == null) {
-            resultadoDocente.setText("Seleccione un plan.");
+            setLabelError(resultadoDocente, "Seleccione un plan.");
             return;
         }
         try {
             String cedula = cedulaDocente.getText().trim();
+            if (cedula.isEmpty()) {
+                setLabelError(resultadoDocente, "Ingrese la cédula del docente.");
+                return;
+            }
             String msg = acceso.docenteSalida(cedula, p.idPlan());
-            resultadoDocente.setText(msg);
+            if (msg.startsWith("Salida de docente registrada")) {
+                setLabelOk(resultadoDocente, msg);
+            } else {
+                setLabelError(resultadoDocente, msg);
+            }
             auditoria.registrar("PORTERIA", "SALIDA_DOCENTE",
                     "cedula=" + cedula + ", plan=" + p.idPlan() + ", msg=" + msg, cedula);
         } catch (SQLException e) {
-            resultadoDocente.setText("Error: " + e.getMessage());
+            setLabelError(resultadoDocente, "Error de BD: " + e.getMessage());
         }
+    }
+
+    private static void setLabelOk(Label lbl, String msg) {
+        lbl.setText(msg);
+        lbl.setStyle("-fx-text-fill: #15803d; -fx-font-size: 13px; -fx-font-weight: bold;");
+    }
+
+    private static void setLabelError(Label lbl, String msg) {
+        lbl.setText(msg);
+        lbl.setStyle("-fx-text-fill: #dc2626; -fx-font-size: 13px; -fx-font-weight: bold;");
     }
 }

@@ -28,11 +28,11 @@ public class EstudianteFotoService {
     }
 
     /**
-     * Guarda la imagen y devuelve la ruta relativa almacenada en {@code foto_url}.
+     * Saves the image and returns the relative path stored in {@code foto_url}.
      */
     public String guardar(long idEstudiante, Path archivoOrigen) throws IOException {
         if (!Files.isRegularFile(archivoOrigen)) {
-            throw new IOException("Archivo de imagen no encontrado.");
+            throw new IOException("No se encontró el archivo de imagen.");
         }
         long size = Files.size(archivoOrigen);
         if (size > MAX_BYTES) {

@@ -75,7 +75,8 @@ Una vez que aparece la ventana, usa cualquiera de estos usuarios. La contraseña
 |---------|-----------|-----|-------------------|
 | `admin` | `password` | Administrador | Todo: usuarios, auditoría, configuración |
 | `coordinador` | `password` | Coordinador | Gestionar estudiantes, docentes, planes, servicios |
-| `porteria` | `password` | Portería | Registrar entradas y salidas |
+| `docente` | `password` | Docente | Panel de docente: planes, horarios y notificaciones |
+| `porteria` | `password` | Portería | Registrar entradas y salidas (solo Control Acceso) |
 | `consulta` | `password` | Consulta | Solo ver información, sin modificar |
 | `1090123456` | `password` | Estudiante | Ver su propio perfil e historial |
 

@@ -7,7 +7,7 @@ public final class PeriodoAcademico {
     private PeriodoAcademico() {
     }
 
-    /** Enero–junio = 1, julio–diciembre = 2 (configuración simple para el prototipo). */
+    /** January–June = 1, July–December = 2 (simple prototype configuration). */
     public static int periodoDeFecha(LocalDate d) {
         return d.getMonthValue() <= 6 ? 1 : 2;
     }

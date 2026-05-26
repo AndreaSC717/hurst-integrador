@@ -118,7 +118,7 @@ public class DashboardController {
             if (listaAlertas.getItems().isEmpty()) {
                 listaAlertas.setItems(FXCollections.observableArrayList(
                         registros.listCedulasFranjaVencidaSinSalida().stream()
-                                .map(c -> "Franja vencida sin salida: " + c)
+                                .map(c -> "Franja vencida sin salida registrada: " + c)
                                 .toList()));
             }
 
@@ -144,7 +144,7 @@ public class DashboardController {
     private static String tiempoRelativo(LocalDateTime ts) {
         long min = ChronoUnit.MINUTES.between(ts, LocalDateTime.now());
         if (min < 1) {
-            return "Hace un momento";
+            return "Ahora mismo";
         }
         if (min < 60) {
             return "Hace " + min + " min";

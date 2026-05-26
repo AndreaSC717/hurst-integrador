@@ -6,6 +6,7 @@ public record UsuarioSistema(
         String contrasenaHash,
         Rol rol,
         boolean activo,
-        Long idEstudiante
+        Long idEstudiante,
+        Long idDocente
 ) {
 }

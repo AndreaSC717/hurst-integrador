@@ -8,4 +8,8 @@ public record Docente(
         long idUniversidad,
         String programaQueSupervisa
 ) {
+    @Override
+    public String toString() {
+        return nombre + " " + apellido;
+    }
 }

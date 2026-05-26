@@ -1,5 +1,5 @@
 -- ============================================================
--- HUSRT-Control — Setup completo para MySQL local (sin Docker)
+-- HUSRT-Control — Setup completo para MySQL local
 -- Uso: mysql -u root -p < setup_db.sql
 -- ============================================================
 
@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS estudiante (
     arl_vigencia_inicio  DATE,
     arl_vigencia_fin     DATE,
     estado               ENUM('ACTIVO','INACTIVO') NOT NULL DEFAULT 'ACTIVO',
+    vacunas_completas    BOOLEAN      NOT NULL DEFAULT FALSE,
     CONSTRAINT fk_est_univ FOREIGN KEY (id_universidad)
         REFERENCES universidad(id_universidad)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -151,17 +152,31 @@ CREATE TABLE IF NOT EXISTS programa_requisito_horas (
     horas_requeridas_semestre INT          NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS notificacion (
+    id_notificacion BIGINT       AUTO_INCREMENT PRIMARY KEY,
+    id_docente      BIGINT       NOT NULL,
+    id_estudiante   BIGINT       NOT NULL,
+    mensaje         TEXT         NOT NULL,
+    fecha_envio     DATETIME(3)  NOT NULL DEFAULT NOW(3),
+    leida           BOOLEAN      NOT NULL DEFAULT FALSE,
+    CONSTRAINT fk_notif_doc FOREIGN KEY (id_docente)   REFERENCES docente(id_docente),
+    CONSTRAINT fk_notif_est FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS usuario_sistema (
     id_usuario        BIGINT       AUTO_INCREMENT PRIMARY KEY,
     nombre_usuario    VARCHAR(100) NOT NULL UNIQUE,
     contrasena_hash   VARCHAR(255) NOT NULL,
-    rol               ENUM('ADMINISTRADOR','COORDINADOR','PORTERIA','CONSULTA','ESTUDIANTE') NOT NULL,
+    rol               VARCHAR(50)  NOT NULL,
     activo            BOOLEAN      NOT NULL DEFAULT TRUE,
     id_estudiante     BIGINT,
+    id_docente        BIGINT,
     intentos_fallidos INT          NOT NULL DEFAULT 0,
     bloqueado_hasta   DATETIME,
     CONSTRAINT fk_usr_est FOREIGN KEY (id_estudiante)
-        REFERENCES estudiante(id_estudiante)
+        REFERENCES estudiante(id_estudiante),
+    CONSTRAINT fk_usr_doc FOREIGN KEY (id_docente)
+        REFERENCES docente(id_docente)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================================
@@ -187,12 +202,12 @@ INSERT INTO docente (id_docente, cedula, nombre, apellido, id_universidad, progr
 
 INSERT INTO estudiante (id_estudiante, cedula, nombre, apellido, foto_url, programa_academico,
                         semestre_academico, id_universidad, induccion_completada, fecha_induccion,
-                        arl_vigencia_inicio, arl_vigencia_fin, estado) VALUES
-(1, '1090123456', 'María', 'López',    NULL, 'Enfermería',   4, 1, TRUE,  '2026-01-15', '2026-01-01', '2026-12-31', 'ACTIVO'),
-(2, '1090234567', 'Juan',  'Martínez', NULL, 'Medicina',     6, 2, TRUE,  '2026-01-20', '2026-01-01', '2026-12-31', 'ACTIVO'),
-(3, '1090345678', 'Ana',   'Sánchez',  NULL, 'Fisioterapia', 5, 1, TRUE,  '2026-02-01', '2026-01-01', '2026-12-31', 'ACTIVO'),
-(4, '1090456789', 'Pedro', 'García',   NULL, 'Enfermería',   3, 1, FALSE, NULL,          NULL,          NULL,         'ACTIVO'),
-(5, '1090567890', 'Sofía', 'Vargas',   NULL, 'Medicina',     7, 2, TRUE,  '2025-07-10', '2025-07-01', '2025-12-31', 'ACTIVO');
+                        arl_vigencia_inicio, arl_vigencia_fin, estado, vacunas_completas) VALUES
+(1, '1090123456', 'María', 'López',    NULL, 'Enfermería',   4, 1, TRUE,  '2026-01-15', '2026-01-01', '2026-12-31', 'ACTIVO', TRUE),
+(2, '1090234567', 'Juan',  'Martínez', NULL, 'Medicina',     6, 2, TRUE,  '2026-01-20', '2026-01-01', '2026-12-31', 'ACTIVO', TRUE),
+(3, '1090345678', 'Ana',   'Sánchez',  NULL, 'Fisioterapia', 5, 1, TRUE,  '2026-02-01', '2026-01-01', '2026-12-31', 'ACTIVO', TRUE),
+(4, '1090456789', 'Pedro', 'García',   NULL, 'Enfermería',   3, 1, FALSE, NULL,          NULL,          NULL,         'ACTIVO', FALSE),
+(5, '1090567890', 'Sofía', 'Vargas',   NULL, 'Medicina',     7, 2, TRUE,  '2025-07-10', '2025-07-01', '2025-12-31', 'ACTIVO', FALSE);
 
 INSERT INTO inscripcion_semestral (id_estudiante, anio, periodo, activo) VALUES
 (1, 2026, 1, TRUE),
@@ -227,9 +242,10 @@ INSERT INTO programa_requisito_horas (programa_academico, horas_requeridas_semes
 -- Usuarios demo — contraseña: "password"
 SET @hash = '$2a$10$BmYQI1MP0b7p4qAqJhmGh.RNXTGahEinn5CsSuNvHh/V7amtCbWma';
 
-INSERT INTO usuario_sistema (nombre_usuario, contrasena_hash, rol, activo, id_estudiante) VALUES
-('admin',       @hash, 'ADMINISTRADOR', TRUE, NULL),
-('coordinador', @hash, 'COORDINADOR',   TRUE, NULL),
-('porteria',    @hash, 'PORTERIA',      TRUE, NULL),
-('consulta',    @hash, 'CONSULTA',      TRUE, NULL),
-('1090123456',  @hash, 'ESTUDIANTE',    TRUE, 1);
+INSERT INTO usuario_sistema (nombre_usuario, contrasena_hash, rol, activo, id_estudiante, id_docente) VALUES
+('admin',       @hash, 'ADMINISTRADOR', TRUE, NULL, NULL),
+('coordinador', @hash, 'COORDINADOR',   TRUE, NULL, NULL),
+('docente',     @hash, 'DOCENTE',       TRUE, NULL, 1),
+('consulta',    @hash, 'CONSULTA',      TRUE, NULL, NULL),
+('porteria',    @hash, 'PORTERIA',      TRUE, NULL, NULL),
+('1090123456',  @hash, 'ESTUDIANTE',    TRUE, 1,    NULL);

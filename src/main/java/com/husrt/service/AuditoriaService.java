@@ -20,7 +20,7 @@ public class AuditoriaService {
             String rol = u != null ? u.rol().name() : null;
             repo.insert(id, nombre, rol, modulo, accion, detalle, entidadRef);
         } catch (Exception ignored) {
-            // La auditoría no debe interrumpir la operación principal.
+            // Audit logging must not interrupt the main operation.
         }
     }
 }

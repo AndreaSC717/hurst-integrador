@@ -1,19 +1,5 @@
 package com.husrt.ui.coordinacion;
 
-import com.husrt.model.*;
-import com.husrt.repository.*;
-import com.husrt.service.EstudianteFotoService;
-import com.husrt.ui.NavigationContext;
-import com.husrt.util.PeriodoAcademico;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.stage.FileChooser;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.sql.SQLException;
@@ -23,87 +9,210 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
+import com.husrt.model.AsignacionPractica;
+import com.husrt.model.Docente;
+import com.husrt.model.EstadoEstudiante;
+import com.husrt.model.Estudiante;
+import com.husrt.model.PlanPracticas;
+import com.husrt.model.ServicioHospitalario;
+import com.husrt.model.Universidad;
+import com.husrt.repository.DocenteRepository;
+import com.husrt.repository.EstudianteRepository;
+import com.husrt.repository.PlanPracticasRepository;
+import com.husrt.repository.ServicioRepository;
+import com.husrt.repository.UniversidadRepository;
+import com.husrt.service.EstudianteFotoService;
+import com.husrt.ui.NavigationContext;
+import com.husrt.util.PeriodoAcademico;
+
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
+
 public class CoordinacionController {
 
-    @FXML private TabPane coordTabs;
-    @FXML private TableView<Universidad> tablaUniversidades;
-    @FXML private TableColumn<Universidad, Long> colUId;
-    @FXML private TableColumn<Universidad, String> colUNombre;
-    @FXML private TableColumn<Universidad, String> colUCiudad;
-    @FXML private TableColumn<Universidad, String> colUTipo;
-    @FXML private TextField uNombre;
-    @FXML private TextField uCiudad;
-    @FXML private TextField uTipo;
-    @FXML private Label msgUniversidad;
+    /** Tab index for Estudiantes in coordinacion.fxml (Universidades=0, Servicios=1, Estudiantes=2). */
+    private static final int TAB_ESTUDIANTES = 2;
 
-    @FXML private TableView<ServicioHospitalario> tablaServicios;
-    @FXML private TableColumn<ServicioHospitalario, Long> colSId;
-    @FXML private TableColumn<ServicioHospitalario, String> colSNombre;
-    @FXML private TableColumn<ServicioHospitalario, String> colSPiso;
-    @FXML private TableColumn<ServicioHospitalario, Integer> colSCap;
-    @FXML private TextField sNombre;
-    @FXML private TextField sPiso;
-    @FXML private Spinner<Integer> sCap;
-    @FXML private Label msgServicio;
+    @FXML
+    private TabPane coordTabs;
+    @FXML
+    private TableView<Universidad> tablaUniversidades;
+    @FXML
+    private TableColumn<Universidad, Long> colUId;
+    @FXML
+    private TableColumn<Universidad, String> colUNombre;
+    @FXML
+    private TableColumn<Universidad, String> colUCiudad;
+    @FXML
+    private TableColumn<Universidad, String> colUTipo;
+    @FXML
+    private TextField uNombre;
+    @FXML
+    private TextField uCiudad;
+    @FXML
+    private TextField uTipo;
+    @FXML
+    private Label msgUniversidad;
 
-    @FXML private TableView<Estudiante> tablaEstudiantes;
-    @FXML private TableColumn<Estudiante, Long> colEId;
-    @FXML private TableColumn<Estudiante, String> colECedula;
-    @FXML private TableColumn<Estudiante, String> colENombre;
-    @FXML private TableColumn<Estudiante, String> colEApellido;
-    @FXML private TableColumn<Estudiante, String> colEProg;
-    @FXML private TextField eId;
-    @FXML private TextField eCedula;
-    @FXML private TextField eNombre;
-    @FXML private TextField eApellido;
-    @FXML private ComboBox<Universidad> eUniversidad;
-    @FXML private TextField ePrograma;
-    @FXML private Spinner<Integer> eSemestre;
-    @FXML private CheckBox eInduccion;
-    @FXML private DatePicker eFechaInd;
-    @FXML private DatePicker eArlIni;
-    @FXML private DatePicker eArlFin;
-    @FXML private ComboBox<EstadoEstudiante> eEstado;
-    @FXML private ImageView eFotoPreview;
-    @FXML private Label msgEstudiante;
+    @FXML
+    private TableView<ServicioHospitalario> tablaServicios;
+    @FXML
+    private TableColumn<ServicioHospitalario, Long> colSId;
+    @FXML
+    private TableColumn<ServicioHospitalario, String> colSNombre;
+    @FXML
+    private TableColumn<ServicioHospitalario, String> colSPiso;
+    @FXML
+    private TableColumn<ServicioHospitalario, Integer> colSCap;
+    @FXML
+    private TextField sNombre;
+    @FXML
+    private TextField sPiso;
+    @FXML
+    private Spinner<Integer> sCap;
+    @FXML
+    private Label msgServicio;
 
-    @FXML private TableView<Docente> tablaDocentes;
-    @FXML private TableColumn<Docente, Long> colDId;
-    @FXML private TableColumn<Docente, String> colDCedula;
-    @FXML private TableColumn<Docente, String> colDNombre;
-    @FXML private TableColumn<Docente, String> colDApellido;
-    @FXML private TableColumn<Docente, String> colDProg;
-    @FXML private TextField dId;
-    @FXML private TextField dCedula;
-    @FXML private TextField dNombre;
-    @FXML private TextField dApellido;
-    @FXML private ComboBox<Universidad> dUniversidad;
-    @FXML private TextField dPrograma;
-    @FXML private Label msgDocente;
+    @FXML
+    private TableView<Estudiante> tablaEstudiantes;
+    @FXML
+    private TableColumn<Estudiante, Long> colEId;
+    @FXML
+    private TableColumn<Estudiante, String> colECedula;
+    @FXML
+    private TableColumn<Estudiante, String> colENombre;
+    @FXML
+    private TableColumn<Estudiante, String> colEApellido;
+    @FXML
+    private TableColumn<Estudiante, String> colEProg;
+    @FXML
+    private TableColumn<Estudiante, String> colEUni;
+    @FXML
+    private TableColumn<Estudiante, String> colEEstado;
+    @FXML
+    private Label lblEstudiantesCount;
+    @FXML
+    private TextField eId;
+    @FXML
+    private TextField eCedula;
+    @FXML
+    private TextField eNombre;
+    @FXML
+    private TextField eApellido;
+    @FXML
+    private ComboBox<Universidad> eUniversidad;
+    @FXML
+    private TextField ePrograma;
+    @FXML
+    private Spinner<Integer> eSemestre;
+    @FXML
+    private CheckBox eInduccion;
+    @FXML
+    private DatePicker eFechaInd;
+    @FXML
+    private DatePicker eArlIni;
+    @FXML
+    private DatePicker eArlFin;
+    @FXML
+    private ComboBox<EstadoEstudiante> eEstado;
+    @FXML
+    private ImageView eFotoPreview;
+    @FXML
+    private Label msgEstudiante;
 
-    @FXML private ComboBox<Docente> pDocente;
-    @FXML private ComboBox<Universidad> pUniversidad;
-    @FXML private TextField pSemestre;
-    @FXML private Spinner<Integer> pMes;
-    @FXML private Spinner<Integer> pAnio;
-    @FXML private Spinner<Integer> pPeriodo;
-    @FXML private Label msgPlan;
+    @FXML
+    private TableView<Docente> tablaDocentes;
+    @FXML
+    private TableColumn<Docente, Long> colDId;
+    @FXML
+    private TableColumn<Docente, String> colDCedula;
+    @FXML
+    private TableColumn<Docente, String> colDNombre;
+    @FXML
+    private TableColumn<Docente, String> colDApellido;
+    @FXML
+    private TableColumn<Docente, String> colDProg;
+    @FXML
+    private TableColumn<Docente, String> colDUni;
+    @FXML
+    private TextField dId;
+    @FXML
+    private TextField dCedula;
+    @FXML
+    private TextField dNombre;
+    @FXML
+    private TextField dApellido;
+    @FXML
+    private ComboBox<Universidad> dUniversidad;
+    @FXML
+    private TextField dPrograma;
+    @FXML
+    private Label msgDocente;
 
-    @FXML private ComboBox<PlanPracticas> aPlan;
-    @FXML private ComboBox<Estudiante> aEstudiante;
-    @FXML private ComboBox<ServicioHospitalario> aServicio;
-    @FXML private Spinner<Integer> aDia;
-    @FXML private TextField aHoraIni;
-    @FXML private TextField aHoraFin;
-    @FXML private DatePicker aFechaEsp;
-    @FXML private Label msgAsignacion;
-    @FXML private TableView<AsignacionPractica> tablaAsignaciones;
-    @FXML private TableColumn<AsignacionPractica, Long> colAId;
-    @FXML private TableColumn<AsignacionPractica, Long> colAEst;
-    @FXML private TableColumn<AsignacionPractica, Long> colASrv;
-    @FXML private TableColumn<AsignacionPractica, Integer> colADia;
-    @FXML private TableColumn<AsignacionPractica, String> colAHi;
-    @FXML private TableColumn<AsignacionPractica, String> colAHf;
+    @FXML
+    private ComboBox<Docente> pDocente;
+    @FXML
+    private ComboBox<Universidad> pUniversidad;
+    @FXML
+    private TextField pSemestre;
+    @FXML
+    private Spinner<Integer> pMes;
+    @FXML
+    private Spinner<Integer> pAnio;
+    @FXML
+    private Spinner<Integer> pPeriodo;
+    @FXML
+    private Label msgPlan;
+
+    @FXML
+    private ComboBox<PlanPracticas> aPlan;
+    @FXML
+    private ComboBox<Estudiante> aEstudiante;
+    @FXML
+    private Label lblAUniversidad;
+    @FXML
+    private ComboBox<ServicioHospitalario> aServicio;
+    @FXML
+    private Spinner<Integer> aDia;
+    @FXML
+    private ComboBox<String> aHoraIni;
+    @FXML
+    private ComboBox<String> aHoraFin;
+    @FXML
+    private DatePicker aFechaEsp;
+    @FXML
+    private Label msgAsignacion;
+    @FXML
+    private TableView<AsignacionPractica> tablaAsignaciones;
+    @FXML
+    private TableColumn<AsignacionPractica, Long> colAId;
+    @FXML
+    private TableColumn<AsignacionPractica, String> colAEst;
+    @FXML
+    private TableColumn<AsignacionPractica, String> colASrv;
+    @FXML
+    private TableColumn<AsignacionPractica, Integer> colADia;
+    @FXML
+    private TableColumn<AsignacionPractica, String> colAHi;
+    @FXML
+    private TableColumn<AsignacionPractica, String> colAHf;
 
     private final UniversidadRepository universidades = new UniversidadRepository();
     private final ServicioRepository servicios = new ServicioRepository();
@@ -120,9 +229,14 @@ public class CoordinacionController {
 
     @FXML
     private void initialize() {
-        int tab = NavigationContext.consumeCoordinacionTab();
-        if (coordTabs != null && tab >= 0 && tab < coordTabs.getTabs().size()) {
-            coordTabs.getSelectionModel().select(tab);
+        NavigationContext.CoordinacionModo modo = NavigationContext.consumeCoordinacionModo();
+        if (coordTabs != null && modo == NavigationContext.CoordinacionModo.SOLO_ESTUDIANTES) {
+            applySoloEstudiantesView();
+        } else {
+            int tab = NavigationContext.consumeCoordinacionTab();
+            if (coordTabs != null && tab >= 0 && tab < coordTabs.getTabs().size()) {
+                coordTabs.getSelectionModel().select(tab);
+            }
         }
         sCap.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 500, 10));
         eSemestre.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 1));
@@ -131,13 +245,30 @@ public class CoordinacionController {
         pPeriodo.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 2, PeriodoAcademico.periodoDeFecha(LocalDate.now())));
         aDia.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 7, LocalDate.now().getDayOfWeek().getValue()));
 
+        setupHoraSelectors();
         eEstado.setItems(FXCollections.observableArrayList(EstadoEstudiante.values()));
+        eEstado.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(EstadoEstudiante item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.label());
+            }
+        });
+        eEstado.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(EstadoEstudiante item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.label());
+            }
+        });
 
         bindUniTable();
         bindServTable();
         bindEstTable();
         bindDocTable();
         bindAsigTable();
+        setupPlanComboDisplay();
+        lblAUniversidad.setText("Seleccione un estudiante para ver su universidad.");
 
         try {
             reloadUniversidades();
@@ -148,7 +279,7 @@ public class CoordinacionController {
             reloadEstCombo();
             reloadServCombo();
         } catch (SQLException e) {
-            msgUniversidad.setText("Error cargando datos: " + e.getMessage());
+            msgUniversidad.setText("Error al cargar datos: " + e.getMessage());
         }
 
         tablaUniversidades.getSelectionModel().selectedItemProperty().addListener((o, a, b) -> {
@@ -175,6 +306,84 @@ public class CoordinacionController {
                 msgAsignacion.setText(e.getMessage());
             }
         });
+
+        // When selecting an instructor in the plan, auto-fill the university
+        pDocente.getSelectionModel().selectedItemProperty().addListener((o, a, docente) -> {
+            if (docente != null) {
+                seleccionarUniversidad(pUniversidad, docente.idUniversidad());
+            }
+        });
+
+        aEstudiante.getSelectionModel().selectedItemProperty().addListener((o, a, est) -> {
+            if (est == null) {
+                lblAUniversidad.setText("Seleccione un estudiante para ver su universidad.");
+            } else {
+                lblAUniversidad.setText(nombreUniversidad(est.idUniversidad()));
+            }
+        });
+    }
+
+    private void applySoloEstudiantesView() {
+        var tabs = coordTabs.getTabs();
+        if (TAB_ESTUDIANTES >= tabs.size()) {
+            return;
+        }
+        Tab estudiantesTab = tabs.get(TAB_ESTUDIANTES);
+        coordTabs.getTabs().setAll(estudiantesTab);
+        coordTabs.getSelectionModel().select(estudiantesTab);
+        // Hide tab headers when only the students panel is shown from the sidebar.
+        coordTabs.setTabMinHeight(0);
+        coordTabs.setTabMaxHeight(0);
+        coordTabs.setTabMinWidth(0);
+        coordTabs.setTabMaxWidth(0);
+    }
+
+    private void seleccionarUniversidad(ComboBox<Universidad> combo, long idUniversidad) {
+        for (Universidad u : combo.getItems()) {
+            if (u.idUniversidad() == idUniversidad) {
+                combo.getSelectionModel().select(u);
+                break;
+            }
+        }
+    }
+
+    private String nombreUniversidad(long idUniversidad) {
+        return eUniversidad.getItems().stream()
+                .filter(u -> u.idUniversidad() == idUniversidad)
+                .map(Universidad::nombre)
+                .findFirst()
+                .orElse("—");
+    }
+
+    private String nombreDocente(long idDocente) {
+        return pDocente.getItems().stream()
+                .filter(d -> d.idDocente() == idDocente)
+                .map(d -> d.nombre() + " " + d.apellido())
+                .findFirst()
+                .orElse("Docente #" + idDocente);
+    }
+
+    private String etiquetaPlan(PlanPracticas p) {
+        return nombreDocente(p.idDocente()) + " · " + nombreUniversidad(p.idUniversidad())
+                + " · " + p.semestre() + " (año " + p.anio() + ", periodo " + p.periodo() + ")";
+    }
+
+    private void setupPlanComboDisplay() {
+        aPlan.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(PlanPracticas item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : etiquetaPlan(item));
+            }
+        });
+        ListCell<PlanPracticas> buttonCell = new ListCell<>() {
+            @Override
+            protected void updateItem(PlanPracticas item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "Seleccione un plan de prácticas" : etiquetaPlan(item));
+            }
+        };
+        aPlan.setButtonCell(buttonCell);
     }
 
     private void bindUniTable() {
@@ -197,6 +406,8 @@ public class CoordinacionController {
         colENombre.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().nombre()));
         colEApellido.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().apellido()));
         colEProg.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().programaAcademico()));
+        colEUni.setCellValueFactory(c -> new SimpleStringProperty(nombreUniversidad(c.getValue().idUniversidad())));
+        colEEstado.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().estado().label()));
     }
 
     private void bindDocTable() {
@@ -205,15 +416,62 @@ public class CoordinacionController {
         colDNombre.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().nombre()));
         colDApellido.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().apellido()));
         colDProg.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().programaQueSupervisa()));
+        colDUni.setCellValueFactory(c -> new SimpleStringProperty(nombreUniversidad(c.getValue().idUniversidad())));
     }
 
     private void bindAsigTable() {
         colAId.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().idAsignacion()));
-        colAEst.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().idEstudiante()));
-        colASrv.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().idServicio()));
+        colAEst.setCellValueFactory(c -> {
+            long id = c.getValue().idEstudiante();
+            return new SimpleStringProperty(aEstudiante.getItems().stream()
+                    .filter(e -> e.idEstudiante() == id)
+                    .map(e -> e.nombre() + " " + e.apellido())
+                    .findFirst().orElse("ID " + id));
+        });
+        colASrv.setCellValueFactory(c -> {
+            long id = c.getValue().idServicio();
+            return new SimpleStringProperty(aServicio.getItems().stream()
+                    .filter(s -> s.idServicio() == id)
+                    .map(ServicioHospitalario::nombre)
+                    .findFirst().orElse("ID " + id));
+        });
         colADia.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().diaSemana()));
-        colAHi.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().horaInicio().toString()));
-        colAHf.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().horaFin().toString()));
+        colAHi.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().horaInicio().format(HM)));
+        colAHf.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().horaFin().format(HM)));
+    }
+
+    private void setupHoraSelectors() {
+        List<String> horas = buildTimeOptions();
+        aHoraIni.setItems(FXCollections.observableArrayList(horas));
+        aHoraFin.setItems(FXCollections.observableArrayList(horas));
+        aHoraIni.setEditable(false);
+        aHoraFin.setEditable(false);
+        aHoraIni.setPromptText("Inicio");
+        aHoraFin.setPromptText("Fin");
+        aHoraIni.getSelectionModel().selectFirst();
+        aHoraFin.getSelectionModel().select(2);
+    }
+
+    private List<String> buildTimeOptions() {
+        List<String> horas = new java.util.ArrayList<>();
+        for (int hora = 0; hora < 24; hora++) {
+            for (int minuto : new int[]{0, 30}) {
+                horas.add(String.format("%02d:%02d", hora, minuto));
+            }
+        }
+        return horas;
+    }
+
+    private LocalTime parseHoraSeleccionada(ComboBox<String> selector, String etiqueta) {
+        String valor = selector.getSelectionModel().getSelectedItem();
+        if (valor == null || valor.isBlank()) {
+            throw new IllegalArgumentException("Seleccione una hora de " + etiqueta + ".");
+        }
+        try {
+            return LocalTime.parse(valor, HM);
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("Hora inválida en " + etiqueta + ". Use HH:mm.");
+        }
     }
 
     private void reloadUniversidades() throws SQLException {
@@ -231,8 +489,13 @@ public class CoordinacionController {
     }
 
     private void reloadEstudiantes() throws SQLException {
-        tablaEstudiantes.setItems(FXCollections.observableArrayList(estudiantes.findAll()));
+        var lista = FXCollections.observableArrayList(estudiantes.findAll());
+        tablaEstudiantes.setItems(lista);
         aEstudiante.setItems(FXCollections.observableArrayList(estudiantes.findAll()));
+        if (lblEstudiantesCount != null) {
+            int n = lista.size();
+            lblEstudiantesCount.setText(n == 1 ? "1 estudiante registrado" : n + " estudiantes registrados");
+        }
     }
 
     private void reloadDocentes() throws SQLException {
@@ -281,12 +544,7 @@ public class CoordinacionController {
         fotoPendiente = null;
         quitarFotoAlGuardar = false;
         mostrarFotoPreview(fotoUrlActual);
-        for (Universidad u : eUniversidad.getItems()) {
-            if (u.idUniversidad() == b.idUniversidad()) {
-                eUniversidad.getSelectionModel().select(u);
-                break;
-            }
-        }
+        seleccionarUniversidad(eUniversidad, b.idUniversidad());
     }
 
     private void fillDoc(Docente b) {
@@ -298,12 +556,7 @@ public class CoordinacionController {
         dNombre.setText(b.nombre());
         dApellido.setText(b.apellido());
         dPrograma.setText(b.programaQueSupervisa());
-        for (Universidad u : dUniversidad.getItems()) {
-            if (u.idUniversidad() == b.idUniversidad()) {
-                dUniversidad.getSelectionModel().select(u);
-                break;
-            }
-        }
+        seleccionarUniversidad(dUniversidad, b.idUniversidad());
     }
 
     @FXML
@@ -405,7 +658,7 @@ public class CoordinacionController {
     @FXML
     private void onEstQuitarFoto() {
         fotoPendiente = null;
-        quitarFotoAlGuardar = true;
+        quitarFotoAlGuardar = fotoUrlActual != null && !fotoUrlActual.isBlank();
         fotoUrlActual = null;
         mostrarFotoPreview(null);
     }
@@ -434,12 +687,19 @@ public class CoordinacionController {
     private void onEstGuardar() {
         msgEstudiante.setText("");
         try {
+            if (eCedula.getText() == null || eCedula.getText().isBlank()
+                    || eNombre.getText() == null || eNombre.getText().isBlank()
+                    || eApellido.getText() == null || eApellido.getText().isBlank()
+                    || ePrograma.getText() == null || ePrograma.getText().isBlank()) {
+                msgEstudiante.setText("Ingrese cédula, nombre, apellido y programa. La foto es opcional.");
+                return;
+            }
             if (eUniversidad.getSelectionModel().getSelectedItem() == null) {
-                msgEstudiante.setText("Seleccione universidad.");
+                msgEstudiante.setText("Seleccione la universidad.");
                 return;
             }
             if (eEstado.getSelectionModel().getSelectedItem() == null) {
-                msgEstudiante.setText("Seleccione estado.");
+                msgEstudiante.setText("Seleccione el estado.");
                 return;
             }
             long idUni = eUniversidad.getSelectionModel().getSelectedItem().idUniversidad();
@@ -456,12 +716,13 @@ public class CoordinacionController {
                     eFechaInd.getValue(),
                     eArlIni.getValue(),
                     eArlFin.getValue(),
-                    eEstado.getSelectionModel().getSelectedItem());
+                    eEstado.getSelectionModel().getSelectedItem(),
+                    false);
 
             if (eId.getText() == null || eId.getText().isBlank()) {
                 Optional<Estudiante> ex = estudiantes.findByCedula(model.cedula());
                 if (ex.isPresent()) {
-                    msgEstudiante.setText("Ya existe un estudiante con esa cédula. Use edición desde la tabla.");
+                    msgEstudiante.setText("Ya existe un estudiante con esa cédula. Edítelo desde la tabla.");
                     return;
                 }
                 long nid = estudiantes.insert(model);
@@ -477,7 +738,7 @@ public class CoordinacionController {
                 fotoPendiente = null;
                 quitarFotoAlGuardar = false;
                 fotoUrlActual = fotoGuardada;
-                msgEstudiante.setText("Estudiante creado e inscrito al semestre actual.");
+                msgEstudiante.setText("Estudiante creado e inscrito en el semestre actual.");
             } else {
                 long id = Long.parseLong(eId.getText().trim());
                 String fotoGuardada = aplicarFotoEstudiante(id);
@@ -494,7 +755,8 @@ public class CoordinacionController {
                         model.fechaInduccion(),
                         model.arlInicio(),
                         model.arlFin(),
-                        model.estado()));
+                        model.estado(),
+                        model.vacunasCompletas()));
                 fotoPendiente = null;
                 quitarFotoAlGuardar = false;
                 fotoUrlActual = fotoGuardada;
@@ -524,7 +786,7 @@ public class CoordinacionController {
         msgDocente.setText("");
         try {
             if (dUniversidad.getSelectionModel().getSelectedItem() == null) {
-                msgDocente.setText("Seleccione universidad.");
+                msgDocente.setText("Seleccione la universidad.");
                 return;
             }
             long idUni = dUniversidad.getSelectionModel().getSelectedItem().idUniversidad();
@@ -578,13 +840,17 @@ public class CoordinacionController {
                 msgAsignacion.setText("Seleccione plan, estudiante y servicio.");
                 return;
             }
-            LocalTime hi = LocalTime.parse(aHoraIni.getText().trim(), HM);
-            LocalTime hf = LocalTime.parse(aHoraFin.getText().trim(), HM);
+            LocalTime hi = parseHoraSeleccionada(aHoraIni, "inicio");
+            LocalTime hf = parseHoraSeleccionada(aHoraFin, "fin");
+            if (!hf.isAfter(hi)) {
+                msgAsignacion.setText("La hora de fin debe ser posterior a la de inicio.");
+                return;
+            }
             LocalDate fe = aFechaEsp.getValue();
             int dia = aDia.getValue();
             int cnt = planesRepo.countAsignadosMismaFranja(plan.idPlan(), srv.idServicio(), dia, fe, hi, hf) + 1;
             if (cnt > srv.capacidadMaximaEstudiantes()) {
-                msgAsignacion.setText("La asignación superaría la capacidad instalada del servicio (" + srv.capacidadMaximaEstudiantes() + ").");
+                msgAsignacion.setText("Esta asignación superaría la capacidad del servicio (" + srv.capacidadMaximaEstudiantes() + ").");
                 return;
             }
             AsignacionPractica a = new AsignacionPractica(0, plan.idPlan(), est.idEstudiante(), srv.idServicio(), dia, hi, hf, fe);

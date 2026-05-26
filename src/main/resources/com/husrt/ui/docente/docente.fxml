@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.husrt.ui.docente.DocenteController"
+            fitToWidth="true" hbarPolicy="NEVER" styleClass="page-scroll">
+    <VBox styleClass="page-root" spacing="20">
+        <padding><Insets top="4" right="4" bottom="24" left="4"/></padding>
+
+        <VBox styleClass="panel-card" spacing="8">
+            <Label text="Panel Docente" styleClass="page-title"/>
+            <Label fx:id="lblNombreDocente" styleClass="page-subtitle"/>
+        </VBox>
+
+        <VBox styleClass="panel-card" spacing="14">
+            <Label text="Mis prácticas asignadas" styleClass="section-title"/>
+            <TableView fx:id="tablaPracticas" prefHeight="220">
+                <columns>
+                    <TableColumn fx:id="colPlan" text="Plan" prefWidth="140"/>
+                    <TableColumn fx:id="colServicio" text="Servicio" prefWidth="200"/>
+                    <TableColumn fx:id="colPeriodo" text="Periodo" prefWidth="120"/>
+                    <TableColumn fx:id="colEstudiantes" text="Estudiantes" prefWidth="120"/>
+                </columns>
+            </TableView>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Button text="Ver horario PDF" onAction="#onGenerarHorarioPdf" styleClass="button-outline"/>
+                <Button text="Modificar clase" onAction="#onModificarClase" styleClass="button-primary"/>
+            </HBox>
+        </VBox>
+
+        <VBox styleClass="panel-card" spacing="14">
+            <Label text="Estudiantes asignados" styleClass="section-title"/>
+            <TableView fx:id="tablaEstudiantes" prefHeight="200">
+                <columns>
+                    <TableColumn fx:id="colEstCedula" text="Cédula" prefWidth="110"/>
+                    <TableColumn fx:id="colEstNombre" text="Nombre" prefWidth="200"/>
+                    <TableColumn fx:id="colEstEstado" text="Estado" prefWidth="100"/>
+                </columns>
+            </TableView>
+            <HBox>
+                <Button text="Ver detalles del estudiante" onAction="#onVerDetallesEstudiante" styleClass="button-outline"/>
+            </HBox>
+        </VBox>
+
+        <VBox styleClass="panel-card" spacing="12">
+            <Label text="Notificaciones enviadas" styleClass="section-title"/>
+            <ListView fx:id="listaNotificaciones" prefHeight="150"/>
+        </VBox>
+
+        <Label fx:id="msgDocente" wrapText="true" maxWidth="900" styleClass="page-subtitle"/>
+    </VBox>
+</ScrollPane>

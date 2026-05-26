@@ -1,5 +1,11 @@
 package com.husrt.ui.admin;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
+
 import com.husrt.model.AuditoriaEvento;
 import com.husrt.model.Estudiante;
 import com.husrt.model.Rol;
@@ -8,45 +14,73 @@ import com.husrt.repository.AuditoriaRepository;
 import com.husrt.repository.EstudianteRepository;
 import com.husrt.repository.UsuarioRepository;
 import com.husrt.service.UsuarioAdminService;
+
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 public class AdminController {
 
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    @FXML private TableView<UsuarioSistema> tablaUsuarios;
-    @FXML private TableColumn<UsuarioSistema, Long> colUid;
-    @FXML private TableColumn<UsuarioSistema, String> colUname;
-    @FXML private TableColumn<UsuarioSistema, String> colUrol;
-    @FXML private TableColumn<UsuarioSistema, String> colUact;
-    @FXML private TextField nuUsuario;
-    @FXML private PasswordField nuClave;
-    @FXML private ComboBox<Rol> nuRol;
-    @FXML private ComboBox<Estudiante> nuEstudiante;
-    @FXML private Label lblEstudianteVinculo;
-    @FXML private Label msgAdmin;
-    @FXML private ComboBox<Rol> editRol;
-    @FXML private PasswordField resetClave;
+    @FXML
+    private TableView<UsuarioSistema> tablaUsuarios;
+    @FXML
+    private TableColumn<UsuarioSistema, Long> colUid;
+    @FXML
+    private TableColumn<UsuarioSistema, String> colUname;
+    @FXML
+    private TableColumn<UsuarioSistema, String> colUrol;
+    @FXML
+    private TableColumn<UsuarioSistema, String> colUact;
+    @FXML
+    private TextField nuUsuario;
+    @FXML
+    private PasswordField nuClave;
+    @FXML
+    private ComboBox<Rol> nuRol;
+    @FXML
+    private ComboBox<Estudiante> nuEstudiante;
+    @FXML
+    private Label lblEstudianteVinculo;
+    @FXML
+    private Label msgAdmin;
+    @FXML
+    private ComboBox<Rol> editRol;
+    @FXML
+    private PasswordField resetClave;
 
-    @FXML private ComboBox<String> filtroModulo;
-    @FXML private DatePicker audDesde;
-    @FXML private DatePicker audHasta;
-    @FXML private TableView<AuditoriaEvento> tablaAuditoria;
-    @FXML private TableColumn<AuditoriaEvento, String> colAudTs;
-    @FXML private TableColumn<AuditoriaEvento, String> colAudUser;
-    @FXML private TableColumn<AuditoriaEvento, String> colAudMod;
-    @FXML private TableColumn<AuditoriaEvento, String> colAudAcc;
-    @FXML private TableColumn<AuditoriaEvento, String> colAudDet;
-    @FXML private Label msgAuditoria;
+    @FXML
+    private ComboBox<String> filtroModulo;
+    @FXML
+    private DatePicker audDesde;
+    @FXML
+    private DatePicker audHasta;
+    @FXML
+    private TableView<AuditoriaEvento> tablaAuditoria;
+    @FXML
+    private TableColumn<AuditoriaEvento, String> colAudTs;
+    @FXML
+    private TableColumn<AuditoriaEvento, String> colAudUser;
+    @FXML
+    private TableColumn<AuditoriaEvento, String> colAudMod;
+    @FXML
+    private TableColumn<AuditoriaEvento, String> colAudAcc;
+    @FXML
+    private TableColumn<AuditoriaEvento, String> colAudDet;
+    @FXML
+    private Label msgAuditoria;
 
     private final UsuarioRepository usuarios = new UsuarioRepository();
     private final EstudianteRepository estudiantes = new EstudianteRepository();
@@ -56,14 +90,42 @@ public class AdminController {
     @FXML
     private void initialize() {
         nuRol.setItems(FXCollections.observableArrayList(Rol.values()));
+        nuRol.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Rol item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.label());
+            }
+        });
+        nuRol.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Rol item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.label());
+            }
+        });
         nuRol.getSelectionModel().select(Rol.CONSULTA);
         nuRol.getSelectionModel().selectedItemProperty().addListener((o, a, b) -> actualizarVinculoEstudiante(b));
 
         editRol.setItems(FXCollections.observableArrayList(Rol.values()));
+        editRol.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Rol item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.label());
+            }
+        });
+        editRol.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Rol item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.label());
+            }
+        });
 
         colUid.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().idUsuario()));
         colUname.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().nombreUsuario()));
-        colUrol.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().rol().name()));
+        colUrol.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().rol().label()));
         colUact.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().activo() ? "Sí" : "No"));
 
         colAudTs.setCellValueFactory(c -> new SimpleStringProperty(
@@ -99,7 +161,7 @@ public class AdminController {
                 }
             });
         } catch (SQLException e) {
-            msgAdmin.setText("Error cargando estudiantes: " + e.getMessage());
+            msgAdmin.setText("Error al cargar estudiantes: " + e.getMessage());
         }
 
         actualizarVinculoEstudiante(Rol.CONSULTA);
@@ -162,6 +224,31 @@ public class AdminController {
     }
 
     @FXML
+    private void onEliminar() {
+        msgAdmin.setText("");
+        UsuarioSistema u = seleccionado();
+        if (u == null) {
+            msgAdmin.setText("Seleccione un usuario de la tabla.");
+            return;
+        }
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Eliminar usuario");
+        confirm.setHeaderText("¿Desea eliminar este usuario?");
+        confirm.setContentText("Se eliminará: " + u.nombreUsuario());
+        Optional<ButtonType> result = confirm.showAndWait();
+        if (result.isEmpty() || result.get() != ButtonType.OK) {
+            return;
+        }
+        try {
+            adminService.eliminarUsuario(u.idUsuario());
+            msgAdmin.setText("Usuario eliminado.");
+            reload();
+        } catch (Exception e) {
+            msgAdmin.setText(e.getMessage());
+        }
+    }
+
+    @FXML
     private void onCambiarRol() {
         msgAdmin.setText("");
         UsuarioSistema u = seleccionado();
@@ -209,12 +296,12 @@ public class AdminController {
         msgAdmin.setText("");
         try {
             if (nuUsuario.getText().isBlank() || nuClave.getText().isBlank()) {
-                msgAdmin.setText("Complete usuario y contraseña.");
+                msgAdmin.setText("Ingrese usuario y contraseña.");
                 return;
             }
             Rol r = nuRol.getSelectionModel().getSelectedItem();
             if (r == null) {
-                msgAdmin.setText("Seleccione rol.");
+                msgAdmin.setText("Seleccione el rol.");
                 return;
             }
             Long idEst = null;
@@ -248,7 +335,7 @@ public class AdminController {
             LocalDate desde = audDesde.getValue();
             LocalDate hasta = audHasta.getValue();
             if (desde == null || hasta == null) {
-                msgAuditoria.setText("Seleccione rango de fechas.");
+                msgAuditoria.setText("Seleccione el rango de fechas.");
                 return;
             }
             String mod = filtroModulo.getSelectionModel().getSelectedItem();
@@ -256,7 +343,7 @@ public class AdminController {
             if ("TODOS".equals(mod)) {
                 rows = auditoriaRepo.findRecientes(500).stream()
                         .filter(a -> !a.timestampEvento().isBefore(desde.atStartOfDay())
-                                && a.timestampEvento().isBefore(hasta.plusDays(1).atStartOfDay()))
+                        && a.timestampEvento().isBefore(hasta.plusDays(1).atStartOfDay()))
                         .toList();
             } else {
                 rows = auditoriaRepo.findPorModulo(mod, desde, hasta, 500);

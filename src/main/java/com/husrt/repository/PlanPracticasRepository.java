@@ -96,6 +96,27 @@ public class PlanPracticasRepository {
         }
     }
 
+    public void updateAsignacion(AsignacionPractica a) throws SQLException {
+        String sql = """
+                UPDATE asignacion_practica
+                SET id_servicio = ?, dia_semana = ?, hora_inicio = ?, hora_fin = ?, fecha_especifica = ?
+                WHERE id_asignacion = ?
+                """;
+        try (Connection c = ds.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setLong(1, a.idServicio());
+            ps.setInt(2, a.diaSemana());
+            ps.setTime(3, Time.valueOf(a.horaInicio()));
+            ps.setTime(4, Time.valueOf(a.horaFin()));
+            if (a.fechaEspecifica() != null) {
+                ps.setDate(5, Date.valueOf(a.fechaEspecifica()));
+            } else {
+                ps.setNull(5, Types.DATE);
+            }
+            ps.setLong(6, a.idAsignacion());
+            ps.executeUpdate();
+        }
+    }
+
     public List<AsignacionPractica> listAsignacionesByPlan(long idPlan) throws SQLException {
         String sql = """
                 SELECT id_asignacion, id_plan, id_estudiante, id_servicio, dia_semana, hora_inicio, hora_fin, fecha_especifica
@@ -148,7 +169,7 @@ public class PlanPracticasRepository {
         }
     }
 
-    /** Estudiantes asignados al servicio en el mismo plan y misma franja horaria (mismo día o fecha específica). */
+    /** Students assigned to the service in the same plan and time slot (same weekday or specific date). */
     public int countAsignadosMismaFranja(long idPlan, long idServicio, int diaSemana, LocalDate fechaEspecifica,
                                          LocalTime hi, LocalTime hf) throws SQLException {
         String sqlFe = """

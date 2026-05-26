@@ -1,14 +1,21 @@
 package com.husrt.repository;
 
-import com.husrt.db.DataSourceManager;
-import com.husrt.model.EstadoEstudiante;
-import com.husrt.model.Estudiante;
-
-import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import javax.sql.DataSource;
+
+import com.husrt.db.DataSourceManager;
+import com.husrt.model.EstadoEstudiante;
+import com.husrt.model.Estudiante;
 
 public class EstudianteRepository {
 
@@ -17,7 +24,7 @@ public class EstudianteRepository {
     public Optional<Estudiante> findByCedula(String cedula) throws SQLException {
         String sql = """
                 SELECT id_estudiante, cedula, nombre, apellido, foto_url, programa_academico, semestre_academico,
-                       id_universidad, induccion_completada, fecha_induccion, arl_vigencia_inicio, arl_vigencia_fin, estado
+                       id_universidad, induccion_completada, fecha_induccion, arl_vigencia_inicio, arl_vigencia_fin, estado, vacunas_completas
                 FROM estudiante WHERE cedula = ?
                 """;
         try (Connection c = ds.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -34,7 +41,7 @@ public class EstudianteRepository {
     public Optional<Estudiante> findById(long id) throws SQLException {
         String sql = """
                 SELECT id_estudiante, cedula, nombre, apellido, foto_url, programa_academico, semestre_academico,
-                       id_universidad, induccion_completada, fecha_induccion, arl_vigencia_inicio, arl_vigencia_fin, estado
+                       id_universidad, induccion_completada, fecha_induccion, arl_vigencia_inicio, arl_vigencia_fin, estado, vacunas_completas
                 FROM estudiante WHERE id_estudiante = ?
                 """;
         try (Connection c = ds.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -51,12 +58,10 @@ public class EstudianteRepository {
     public List<Estudiante> findAll() throws SQLException {
         String sql = """
                 SELECT id_estudiante, cedula, nombre, apellido, foto_url, programa_academico, semestre_academico,
-                       id_universidad, induccion_completada, fecha_induccion, arl_vigencia_inicio, arl_vigencia_fin, estado
+                       id_universidad, induccion_completada, fecha_induccion, arl_vigencia_inicio, arl_vigencia_fin, estado, vacunas_completas
                 FROM estudiante ORDER BY apellido, nombre
                 """;
-        try (Connection c = ds.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection c = ds.getConnection(); PreparedStatement ps = c.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             List<Estudiante> list = new ArrayList<>();
             while (rs.next()) {
                 list.add(map(rs));
@@ -68,8 +73,8 @@ public class EstudianteRepository {
     public long insert(Estudiante e) throws SQLException {
         String sql = """
                 INSERT INTO estudiante (cedula, nombre, apellido, foto_url, programa_academico, semestre_academico,
-                  id_universidad, induccion_completada, fecha_induccion, arl_vigencia_inicio, arl_vigencia_fin, estado)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+                  id_universidad, induccion_completada, fecha_induccion, arl_vigencia_inicio, arl_vigencia_fin, estado, vacunas_completas)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
                 """;
         try (Connection c = ds.getConnection(); PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             bindWrite(ps, e, false);
@@ -97,7 +102,7 @@ public class EstudianteRepository {
     public void update(Estudiante e) throws SQLException {
         String sql = """
                 UPDATE estudiante SET cedula=?, nombre=?, apellido=?, foto_url=?, programa_academico=?, semestre_academico=?,
-                  id_universidad=?, induccion_completada=?, fecha_induccion=?, arl_vigencia_inicio=?, arl_vigencia_fin=?, estado=?
+                  id_universidad=?, induccion_completada=?, fecha_induccion=?, arl_vigencia_inicio=?, arl_vigencia_fin=?, estado=?, vacunas_completas=?
                 WHERE id_estudiante=?
                 """;
         try (Connection c = ds.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -124,6 +129,7 @@ public class EstudianteRepository {
         ps.setObject(i++, e.arlInicio());
         ps.setObject(i++, e.arlFin());
         ps.setString(i++, e.estado().name());
+        ps.setBoolean(i++, e.vacunasCompletas());
         if (forUpdate) {
             ps.setLong(i, e.idEstudiante());
         }
@@ -146,14 +152,13 @@ public class EstudianteRepository {
                 fi != null ? fi.toLocalDate() : null,
                 ai != null ? ai.toLocalDate() : null,
                 af != null ? af.toLocalDate() : null,
-                EstadoEstudiante.fromDb(rs.getString("estado")));
+                EstadoEstudiante.fromDb(rs.getString("estado")),
+                rs.getBoolean("vacunas_completas"));
     }
 
     public int countActivos() throws SQLException {
         String sql = "SELECT COUNT(*) FROM estudiante WHERE estado = 'ACTIVO'";
-        try (Connection c = ds.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection c = ds.getConnection(); PreparedStatement ps = c.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             rs.next();
             return rs.getInt(1);
         }
@@ -194,6 +199,7 @@ public class EstudianteRepository {
     }
 
     public record ArlAlertaRow(String cedula, String nombre, String apellido, java.time.LocalDate arlFin) {
+
     }
 
     public List<ArlAlertaRow> listArlProximaVencer(int dias) throws SQLException {

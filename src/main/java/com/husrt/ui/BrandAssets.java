@@ -16,7 +16,7 @@ public final class BrandAssets {
                 BrandAssets.class.getResource(LOGO_PATH)).toExternalForm(), true);
     }
 
-    /** Carga el logo; el ancho se define en el ImageView (fitWidth). */
+    /** Loads the logo; width is set on the ImageView (fitWidth). */
     public static Image hospitalLogo(double ignoredFitHint) {
         return hospitalLogo();
     }

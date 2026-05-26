@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.husrt.ui.docente.DetallesEstudianteDialogController"
+            style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 20, 0, 0, 0);">
+    <content>
+        <VBox spacing="20" style="-fx-padding: 20;">
+            <Label text="👤 Detalles del estudiante" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #667eea; -fx-font-family: 'Segoe UI', Arial, sans-serif;"/>
+            
+            <VBox spacing="12" style="-fx-background-color: #f8fafc; -fx-background-radius: 10; -fx-padding: 15;">
+                <Label text="Información personal" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #667eea; -fx-font-family: 'Segoe UI', Arial, sans-serif;"/>
+                <GridPane hgap="15" vgap="10">
+                    <Label text="Cédula:" style="-fx-text-fill: #475569; -fx-font-weight: 600; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <Label fx:id="lblCedula" style="-fx-text-fill: #1e293b; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    
+                    <Label text="Nombre:" style="-fx-text-fill: #475569; -fx-font-weight: 600; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <Label fx:id="lblNombre" style="-fx-text-fill: #1e293b; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    
+                    <Label text="Programa:" style="-fx-text-fill: #475569; -fx-font-weight: 600; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <Label fx:id="lblPrograma" style="-fx-text-fill: #1e293b; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                    
+                    <Label text="Semestre:" style="-fx-text-fill: #475569; -fx-font-weight: 600; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                    <Label fx:id="lblSemestre" style="-fx-text-fill: #1e293b; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                    
+                    <Label text="Estado:" style="-fx-text-fill: #475569; -fx-font-weight: 600; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                    <Label fx:id="lblEstado" style="-fx-text-fill: #1e293b; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                </GridPane>
+            </VBox>
+            
+            <VBox spacing="12" style="-fx-background-color: #f8fafc; -fx-background-radius: 10; -fx-padding: 15;">
+                <Label text="Requisitos" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #667eea; -fx-font-family: 'Segoe UI', Arial, sans-serif;"/>
+                <GridPane hgap="15" vgap="10">
+                    <Label text="ARL:" style="-fx-text-fill: #475569; -fx-font-weight: 600; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <Label fx:id="lblArl" style="-fx-text-fill: #1e293b; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    
+                    <Label text="Inducción:" style="-fx-text-fill: #475569; -fx-font-weight: 600; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <Label fx:id="lblInduccion" style="-fx-text-fill: #1e293b; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    
+                    <Label text="Inscripción:" style="-fx-text-fill: #475569; -fx-font-weight: 600; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <Label fx:id="lblInscripcion" style="-fx-text-fill: #1e293b; -fx-font-family: 'Segoe UI', Arial, sans-serif;" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                </GridPane>
+            </VBox>
+            
+            <VBox spacing="12" style="-fx-background-color: #f8fafc; -fx-background-radius: 10; -fx-padding: 15;">
+                <Label text="Avance de práctica" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #667eea; -fx-font-family: 'Segoe UI', Arial, sans-serif;"/>
+                <Label fx:id="lblHoras" style="-fx-text-fill: #1e293b; -fx-font-size: 14px; -fx-font-family: 'Segoe UI', Arial, sans-serif;"/>
+                <ProgressBar fx:id="progressHoras" prefWidth="400" maxWidth="400" style="-fx-accent: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -fx-background-radius: 10; -fx-pref-height: 25;"/>
+            </VBox>
+        </VBox>
+    </content>
+    <ButtonType buttonData="OK_DONE" text="Cerrar" style="-fx-background-color: #667eea; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 12 24; -fx-font-size: 14px; -fx-font-weight: 600; -fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-cursor: hand;"/>
+</DialogPane>

@@ -18,7 +18,7 @@ public class UsuarioRepository {
 
     public Optional<UsuarioSistema> findByUsername(String username) throws SQLException {
         String sql = """
-                SELECT id_usuario, nombre_usuario, contrasena_hash, rol, activo, id_estudiante
+                SELECT id_usuario, nombre_usuario, contrasena_hash, rol, activo, id_estudiante, id_docente
                 FROM usuario_sistema WHERE nombre_usuario = ? AND activo = TRUE
                 """;
         try (Connection c = ds.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -34,7 +34,7 @@ public class UsuarioRepository {
 
     public Optional<UsuarioLoginRow> findLoginRow(String username) throws SQLException {
         String sql = """
-                SELECT id_usuario, nombre_usuario, contrasena_hash, rol, activo, id_estudiante,
+                SELECT id_usuario, nombre_usuario, contrasena_hash, rol, activo, id_estudiante, id_docente,
                        intentos_fallidos, bloqueado_hasta
                 FROM usuario_sistema WHERE nombre_usuario = ?
                 """;
@@ -55,7 +55,7 @@ public class UsuarioRepository {
 
     public Optional<UsuarioSistema> findById(long id) throws SQLException {
         String sql = """
-                SELECT id_usuario, nombre_usuario, contrasena_hash, rol, activo, id_estudiante
+                SELECT id_usuario, nombre_usuario, contrasena_hash, rol, activo, id_estudiante, id_docente
                 FROM usuario_sistema WHERE id_usuario = ?
                 """;
         try (Connection c = ds.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -66,6 +66,91 @@ public class UsuarioRepository {
                 }
                 return Optional.of(map(rs));
             }
+        }
+    }
+
+    public void resetDemoCredentials(String nombreUsuario, String hash) throws SQLException {
+        String sql = """
+                UPDATE usuario_sistema
+                SET contrasena_hash = ?, activo = TRUE, intentos_fallidos = 0, bloqueado_hasta = NULL
+                WHERE nombre_usuario = ?
+                """;
+        try (Connection c = ds.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, hash);
+            ps.setString(2, nombreUsuario);
+            ps.executeUpdate();
+        }
+    }
+
+    public void repairDemoUser(String nombreUsuario, String hash, Rol rol, Long idEstudiante, Long idDocente)
+            throws SQLException {
+        String sql = """
+                UPDATE usuario_sistema
+                SET contrasena_hash = ?, rol = ?, activo = TRUE,
+                    id_estudiante = ?, id_docente = ?,
+                    intentos_fallidos = 0, bloqueado_hasta = NULL
+                WHERE nombre_usuario = ?
+                """;
+        try (Connection c = ds.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            int i = 1;
+            ps.setString(i++, hash);
+            ps.setString(i++, rol.name());
+            if (idEstudiante != null) {
+                ps.setLong(i++, idEstudiante);
+            } else {
+                ps.setNull(i++, Types.BIGINT);
+            }
+            if (idDocente != null) {
+                ps.setLong(i++, idDocente);
+            } else {
+                ps.setNull(i++, Types.BIGINT);
+            }
+            ps.setString(i, nombreUsuario);
+            ps.executeUpdate();
+        }
+    }
+
+    public boolean existsUsername(String nombreUsuario) throws SQLException {
+        String sql = "SELECT 1 FROM usuario_sistema WHERE nombre_usuario = ? LIMIT 1";
+        try (Connection c = ds.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, nombreUsuario);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+    public void upsertDemoUser(String nombreUsuario, String hash, Rol rol, Long idEstudiante, Long idDocente)
+            throws SQLException {
+        String sql = """
+                INSERT INTO usuario_sistema (nombre_usuario, contrasena_hash, rol, activo, id_estudiante, id_docente,
+                    intentos_fallidos, bloqueado_hasta)
+                VALUES (?, ?, ?, TRUE, ?, ?, 0, NULL)
+                ON DUPLICATE KEY UPDATE
+                    contrasena_hash = VALUES(contrasena_hash),
+                    rol = VALUES(rol),
+                    activo = TRUE,
+                    id_estudiante = VALUES(id_estudiante),
+                    id_docente = VALUES(id_docente),
+                    intentos_fallidos = 0,
+                    bloqueado_hasta = NULL
+                """;
+        try (Connection c = ds.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            int i = 1;
+            ps.setString(i++, nombreUsuario);
+            ps.setString(i++, hash);
+            ps.setString(i++, rol.name());
+            if (idEstudiante != null) {
+                ps.setLong(i++, idEstudiante);
+            } else {
+                ps.setNull(i++, Types.BIGINT);
+            }
+            if (idDocente != null) {
+                ps.setLong(i++, idDocente);
+            } else {
+                ps.setNull(i++, Types.BIGINT);
+            }
+            ps.executeUpdate();
         }
     }
 
@@ -124,6 +209,14 @@ public class UsuarioRepository {
         }
     }
 
+    public void deleteById(long id) throws SQLException {
+        String sql = "DELETE FROM usuario_sistema WHERE id_usuario = ?";
+        try (Connection c = ds.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setLong(1, id);
+            ps.executeUpdate();
+        }
+    }
+
     public void incrementarIntentosFallidos(long id) throws SQLException {
         String sql = "UPDATE usuario_sistema SET intentos_fallidos = intentos_fallidos + 1 WHERE id_usuario = ?";
         try (Connection c = ds.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -155,7 +248,7 @@ public class UsuarioRepository {
 
     public List<UsuarioSistema> findAll() throws SQLException {
         String sql = """
-                SELECT id_usuario, nombre_usuario, contrasena_hash, rol, activo, id_estudiante
+                SELECT id_usuario, nombre_usuario, contrasena_hash, rol, activo, id_estudiante, id_docente
                 FROM usuario_sistema ORDER BY nombre_usuario
                 """;
         try (Connection c = ds.getConnection();
@@ -176,6 +269,7 @@ public class UsuarioRepository {
                 rs.getString("contrasena_hash"),
                 Rol.fromDb(rs.getString("rol")),
                 rs.getBoolean("activo"),
-                rs.getObject("id_estudiante", Long.class));
+                rs.getObject("id_estudiante", Long.class),
+                rs.getObject("id_docente", Long.class));
     }
 }

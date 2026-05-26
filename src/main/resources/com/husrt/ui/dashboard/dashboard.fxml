@@ -10,32 +10,30 @@
         <padding><Insets top="4" right="4" bottom="24" left="4"/></padding>
         <HBox alignment="CENTER_LEFT" spacing="12">
             <VBox spacing="2">
-                <Label text="Dashboard Principal" styleClass="page-title"/>
-                <Label text="Hospital Universitario San Rafael de Tunja — Personal Médico en Formación"
-                       styleClass="page-subtitle"/>
+                <Label text="Resumen en tiempo real" styleClass="page-subtitle"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button text="Actualizar" onAction="#onRefresh" styleClass="button-secondary"/>
+            <Button text="Actualizar" onAction="#onRefresh" styleClass="button-outline"/>
             <Label fx:id="ultimaActualizacion" styleClass="topbar-date"/>
         </HBox>
 
         <HBox spacing="16">
-            <VBox styleClass="stat-card stat-card-accent" HBox.hgrow="ALWAYS">
-                <Label fx:id="kpiEstudiantes" text="0" styleClass="stat-value"/>
-                <Label text="Estudiantes activos" styleClass="stat-label"/>
+            <VBox styleClass="kpi-card kpi-card-accent-1" HBox.hgrow="ALWAYS">
+                <Label fx:id="kpiEstudiantes" text="0" styleClass="kpi-number"/>
+                <Label text="Estudiantes activos" styleClass="kpi-title"/>
             </VBox>
-            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
-                <Label fx:id="kpiProfesores" text="0" styleClass="stat-value"/>
-                <Label text="Profesores" styleClass="stat-label"/>
+            <VBox styleClass="kpi-card kpi-card-accent-2" HBox.hgrow="ALWAYS">
+                <Label fx:id="kpiProfesores" text="0" styleClass="kpi-number"/>
+                <Label text="Docentes" styleClass="kpi-title"/>
             </VBox>
-            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
-                <Label fx:id="kpiPresentes" text="0" styleClass="stat-value"/>
-                <Label text="Presentes ahora" styleClass="stat-label"/>
+            <VBox styleClass="kpi-card kpi-card-accent-3" HBox.hgrow="ALWAYS">
+                <Label fx:id="kpiPresentes" text="0" styleClass="kpi-number"/>
+                <Label text="Presentes ahora" styleClass="kpi-title"/>
                 <Label fx:id="kpiPresentesPct" text="0%" styleClass="stat-badge"/>
             </VBox>
-            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
-                <Label fx:id="kpiAlertas" text="0" styleClass="stat-value"/>
-                <Label text="Alertas activas" styleClass="stat-label"/>
+            <VBox styleClass="kpi-card kpi-card-accent-4" HBox.hgrow="ALWAYS">
+                <Label fx:id="kpiAlertas" text="0" styleClass="kpi-number"/>
+                <Label text="Alertas activas" styleClass="kpi-title"/>
             </VBox>
         </HBox>
 
@@ -44,15 +42,15 @@
                 <Label text="Asistencia de hoy" styleClass="section-title"/>
                 <HBox spacing="24">
                     <VBox spacing="4">
-                        <Label fx:id="kpiAsistieron" text="0" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #059669;"/>
-                        <Label text="Asistieron" styleClass="stat-label"/>
+                        <Label fx:id="kpiAsistieron" text="0" styleClass="kpi-number"/>
+                        <Label text="Asistieron" styleClass="kpi-title"/>
                     </VBox>
                     <VBox spacing="4">
-                        <Label fx:id="kpiRechazos" text="0" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #d97706;"/>
+                        <Label fx:id="kpiRechazos" text="0" styleClass="kpi-number"/>
                         <Label text="Rechazados" styleClass="stat-label"/>
                     </VBox>
                 </HBox>
-                <Button text="Ver detalles en Control Acceso" onAction="#onIrPorteria" styleClass="button-secondary"/>
+                <Button text="Ver detalle en Portería" onAction="#onIrPorteria" styleClass="button-secondary"/>
             </VBox>
             <VBox styleClass="panel-card" HBox.hgrow="ALWAYS" spacing="10">
                 <HBox alignment="CENTER_LEFT">

@@ -1,5 +1,8 @@
 package com.husrt.ui.login;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import com.husrt.model.Rol;
 import com.husrt.model.UsuarioSistema;
 import com.husrt.service.AuthService;
@@ -7,6 +10,7 @@ import com.husrt.service.LoginOutcome;
 import com.husrt.session.SessionContext;
 import com.husrt.ui.BrandAssets;
 import com.husrt.ui.UiStyles;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,15 +21,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 public class LoginController {
 
-    @FXML private ImageView logoView;
-    @FXML private TextField usuarioField;
-    @FXML private PasswordField claveField;
-    @FXML private Label mensajeLabel;
+    @FXML
+    private ImageView logoView;
+    @FXML
+    private TextField usuarioField;
+    @FXML
+    private PasswordField claveField;
+    @FXML
+    private Label mensajeLabel;
 
     private final AuthService auth = new AuthService();
 
@@ -40,8 +45,13 @@ public class LoginController {
     }
 
     @FXML
-    private void onDemoCoord() {
+    private void onDemoCoordinador() {
         fillDemo("coordinador");
+    }
+
+    @FXML
+    private void onDemoDocente() {
+        fillDemo("docente");
     }
 
     @FXML
@@ -80,7 +90,7 @@ public class LoginController {
             }
             UsuarioSistema cuenta = ((LoginOutcome.Success) outcome).usuario();
             if (cuenta.rol() == Rol.ESTUDIANTE && cuenta.idEstudiante() == null) {
-                mensajeLabel.setText("Cuenta de estudiante sin vínculo académico. Contacte a coordinación.");
+                mensajeLabel.setText("La cuenta de estudiante no tiene vínculo académico. Contacte a coordinación.");
                 return;
             }
             SessionContext.setCurrent(cuenta);
@@ -107,12 +117,12 @@ public class LoginController {
             if (m.contains("Unknown column 'intentos_fallidos'")
                     || m.contains("Unknown column 'bloqueado_hasta'")
                     || m.contains("auditoria_evento")) {
-                return "Base de datos desactualizada. Ejecute 03_seguridad_auditoria.sql o: docker compose down -v && docker compose up -d";
+                return "La base de datos está desactualizada. Ejecute el script 03_seguridad_auditoria.sql en su servidor MySQL.";
             }
             if (m.contains("Communications link failure")
                     || m.contains("Connection refused")
                     || m.contains("Could not create connection to database server")) {
-                return "No hay conexión con MySQL. Ejecute: docker compose up -d";
+                return "No hay conexión con MySQL. Verifique que el servidor MySQL esté activo en 127.0.0.1:3306 y que las credenciales en application.properties sean correctas.";
             }
             t = t.getCause();
         }

@@ -12,4 +12,8 @@ public record PlanPracticas(
         int periodo,
         LocalDate fechaCarga
 ) {
+    @Override
+    public String toString() {
+        return semestre + " (año " + anio + ", período " + periodo + ")";
+    }
 }

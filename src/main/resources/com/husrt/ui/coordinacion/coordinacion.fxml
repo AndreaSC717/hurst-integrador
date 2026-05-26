@@ -1,199 +1,586 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.geometry.Insets?>
+
 <?import javafx.scene.control.*?>
+
 <?import javafx.scene.image.ImageView?>
+
 <?import javafx.scene.layout.*?>
 
+
+
 <TabPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+
          fx:id="coordTabs"
+
          fx:controller="com.husrt.ui.coordinacion.CoordinacionController" tabClosingPolicy="UNAVAILABLE"
-         styleClass="panel-card">
+
+         styleClass="page-scroll">
+
     <Tab text="Universidades">
+
         <BorderPane>
+
             <center>
+
                 <TableView fx:id="tablaUniversidades" prefHeight="260">
+
                     <columns>
+
                         <TableColumn fx:id="colUId" text="ID" prefWidth="50"/>
+
                         <TableColumn fx:id="colUNombre" text="Nombre" prefWidth="220"/>
+
                         <TableColumn fx:id="colUCiudad" text="Ciudad" prefWidth="120"/>
+
                         <TableColumn fx:id="colUTipo" text="Convenio" prefWidth="160"/>
+
                     </columns>
+
                 </TableView>
+
             </center>
+
             <bottom>
+
                 <VBox spacing="8"><padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+
                     <HBox spacing="8">
+
                         <TextField fx:id="uNombre" promptText="Nombre" prefWidth="220"/>
+
                         <TextField fx:id="uCiudad" promptText="Ciudad" prefWidth="140"/>
-                        <TextField fx:id="uTipo" promptText="Tipo convenio" prefWidth="160"/>
+
+                        <TextField fx:id="uTipo" promptText="Tipo de convenio" prefWidth="160"/>
+
                     </HBox>
+
                     <HBox spacing="8">
-                        <Button text="Nuevo" onAction="#onUniNuevo"/>
-                        <Button text="Guardar" onAction="#onUniGuardar"/>
+
+                        <Button text="➕ Nuevo" onAction="#onUniNuevo"/>
+
+                        <Button text="💾 Guardar" onAction="#onUniGuardar"/>
+
                     </HBox>
+
                     <Label fx:id="msgUniversidad" wrapText="true"/>
+
                 </VBox>
+
             </bottom>
+
         </BorderPane>
+
     </Tab>
+
     <Tab text="Servicios">
+
         <BorderPane>
+
             <center>
+
                 <TableView fx:id="tablaServicios" prefHeight="260">
+
                     <columns>
+
                         <TableColumn fx:id="colSId" text="ID" prefWidth="50"/>
+
                         <TableColumn fx:id="colSNombre" text="Nombre" prefWidth="200"/>
+
                         <TableColumn fx:id="colSPiso" text="Piso" prefWidth="80"/>
+
                         <TableColumn fx:id="colSCap" text="Capacidad" prefWidth="90"/>
+
                     </columns>
+
                 </TableView>
+
             </center>
+
             <bottom>
+
                 <VBox spacing="8"><padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+
                     <HBox spacing="8">
-                        <TextField fx:id="sNombre" promptText="Nombre servicio" prefWidth="200"/>
+
+                        <TextField fx:id="sNombre" promptText="Nombre del servicio" prefWidth="200"/>
+
                         <TextField fx:id="sPiso" promptText="Piso" prefWidth="80"/>
+
                         <Spinner fx:id="sCap" editable="true" prefWidth="100"/>
+
                     </HBox>
+
                     <HBox spacing="8">
-                        <Button text="Nuevo" onAction="#onServNuevo"/>
-                        <Button text="Guardar" onAction="#onServGuardar"/>
+
+                        <Button text="➕ Nuevo" onAction="#onServNuevo"/>
+
+                        <Button text="💾 Guardar" onAction="#onServGuardar"/>
+
                     </HBox>
+
                     <Label fx:id="msgServicio" wrapText="true"/>
+
                 </VBox>
+
             </bottom>
+
         </BorderPane>
+
     </Tab>
+
     <Tab text="Estudiantes">
+
         <BorderPane>
+
+            <top>
+
+                <HBox spacing="12" alignment="CENTER_LEFT">
+
+                    <padding><Insets top="8" right="8" bottom="4" left="8"/></padding>
+
+                    <Label text="Listado de estudiantes" styleClass="section-title"/>
+
+                    <Label fx:id="lblEstudiantesCount" styleClass="page-subtitle"/>
+
+                </HBox>
+
+            </top>
+
             <center>
-                <TableView fx:id="tablaEstudiantes" prefHeight="220">
+
+                <TableView fx:id="tablaEstudiantes" minHeight="280">
+
                     <columns>
+
                         <TableColumn fx:id="colEId" text="ID" prefWidth="40"/>
+
                         <TableColumn fx:id="colECedula" text="Cédula" prefWidth="100"/>
+
                         <TableColumn fx:id="colENombre" text="Nombre" prefWidth="120"/>
+
                         <TableColumn fx:id="colEApellido" text="Apellido" prefWidth="120"/>
-                        <TableColumn fx:id="colEProg" text="Programa" prefWidth="140"/>
+
+                        <TableColumn fx:id="colEProg" text="Programa" prefWidth="120"/>
+
+                        <TableColumn fx:id="colEUni" text="Universidad" prefWidth="140"/>
+
+                        <TableColumn fx:id="colEEstado" text="Estado" prefWidth="90"/>
+
                     </columns>
+
                 </TableView>
+
             </center>
+
             <bottom>
-                <ScrollPane fitToWidth="true">
+
+                <ScrollPane fitToWidth="true" prefViewportHeight="220" maxHeight="280" vbarPolicy="AS_NEEDED">
+
                     <VBox spacing="8"><padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+
+                        <Label text="Datos del estudiante" styleClass="section-title"/>
+
+                        <GridPane hgap="12" vgap="8">
+
+                            <columnConstraints>
+
+                                <ColumnConstraints minWidth="100" prefWidth="110"/>
+
+                                <ColumnConstraints hgrow="ALWAYS"/>
+
+                                <ColumnConstraints minWidth="100" prefWidth="110"/>
+
+                                <ColumnConstraints hgrow="ALWAYS"/>
+
+                            </columnConstraints>
+
+                            <Label text="ID (vacío = nuevo):" style="-fx-font-weight: 600;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+
+                            <TextField fx:id="eId" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                            <Label text="Cédula:" style="-fx-font-weight: 600;" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+
+                            <TextField fx:id="eCedula" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                            <Label text="Nombre:" style="-fx-font-weight: 600;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+                            <TextField fx:id="eNombre" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                            <Label text="Apellido:" style="-fx-font-weight: 600;" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+                            <TextField fx:id="eApellido" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                            <Label text="Universidad:" style="-fx-font-weight: 600;" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+                            <ComboBox fx:id="eUniversidad" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                            <Label text="Programa académico:" style="-fx-font-weight: 600;" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+
+                            <TextField fx:id="ePrograma" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+
+                            <Label text="Semestre actual:" style="-fx-font-weight: 600;" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+
+                            <Spinner fx:id="eSemestre" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                        </GridPane>
+
                         <HBox spacing="8">
-                            <TextField fx:id="eId" promptText="ID (vacío=nuevo)" prefWidth="90"/>
-                            <TextField fx:id="eCedula" promptText="Cédula" prefWidth="120"/>
-                            <TextField fx:id="eNombre" promptText="Nombre" prefWidth="120"/>
-                            <TextField fx:id="eApellido" promptText="Apellido" prefWidth="120"/>
-                        </HBox>
-                        <HBox spacing="8">
-                            <ComboBox fx:id="eUniversidad" prefWidth="260" promptText="Universidad"/>
-                            <TextField fx:id="ePrograma" promptText="Programa académico" prefWidth="180"/>
-                            <Spinner fx:id="eSemestre" editable="true" prefWidth="90"/>
-                        </HBox>
-                        <HBox spacing="8">
+
                             <CheckBox fx:id="eInduccion" text="Inducción completada"/>
-                            <DatePicker fx:id="eFechaInd" promptText="Fecha inducción"/>
-                            <DatePicker fx:id="eArlIni" promptText="ARL inicio"/>
-                            <DatePicker fx:id="eArlFin" promptText="ARL fin"/>
+
+                            <DatePicker fx:id="eFechaInd" promptText="Fecha de inducción"/>
+
+                            <DatePicker fx:id="eArlIni" promptText="Inicio ARL"/>
+
+                            <DatePicker fx:id="eArlFin" promptText="Fin ARL"/>
+
                         </HBox>
+
                         <HBox spacing="12" alignment="CENTER_LEFT">
+
                             <ComboBox fx:id="eEstado" prefWidth="140"/>
-                            <VBox spacing="6" alignment="CENTER">
+
+                            <VBox spacing="6" alignment="CENTER_LEFT">
+
+                                <Label text="Foto (opcional)" styleClass="form-label"/>
+
                                 <ImageView fx:id="eFotoPreview" fitWidth="96" fitHeight="96" preserveRatio="true"
+
                                            style="-fx-border-color: #ccc; -fx-border-width: 1;"/>
-                                <HBox spacing="8" alignment="CENTER">
-                                    <Button text="Subir foto" onAction="#onEstSubirFoto"/>
-                                    <Button text="Quitar foto" onAction="#onEstQuitarFoto"/>
+
+                                <HBox spacing="8" alignment="CENTER_LEFT">
+
+                                    <Button text="📷 Subir foto" onAction="#onEstSubirFoto"/>
+
+                                    <Button text="❌ Quitar foto" onAction="#onEstQuitarFoto"/>
+
                                 </HBox>
+
+                                <Label text="Puede guardar el estudiante sin foto y subirla después." wrapText="true"
+
+                                       styleClass="page-subtitle" maxWidth="220"/>
+
                             </VBox>
+
                         </HBox>
+
                         <HBox spacing="8">
-                            <Button text="Nuevo" onAction="#onEstNuevo"/>
-                            <Button text="Guardar" onAction="#onEstGuardar"/>
+
+                            <Button text="➕ Nuevo" onAction="#onEstNuevo"/>
+
+                            <Button text="💾 Guardar" onAction="#onEstGuardar"/>
+
                         </HBox>
+
                         <Label fx:id="msgEstudiante" wrapText="true"/>
+
                     </VBox>
+
                 </ScrollPane>
+
             </bottom>
+
         </BorderPane>
+
     </Tab>
+
     <Tab text="Docentes">
+
         <BorderPane>
+
             <center>
+
                 <TableView fx:id="tablaDocentes" prefHeight="260">
+
                     <columns>
+
                         <TableColumn fx:id="colDId" text="ID" prefWidth="50"/>
+
                         <TableColumn fx:id="colDCedula" text="Cédula" prefWidth="100"/>
+
                         <TableColumn fx:id="colDNombre" text="Nombre" prefWidth="120"/>
+
                         <TableColumn fx:id="colDApellido" text="Apellido" prefWidth="120"/>
-                        <TableColumn fx:id="colDProg" text="Programa supervisado" prefWidth="180"/>
+
+                        <TableColumn fx:id="colDProg" text="Programa supervisado" prefWidth="140"/>
+
+                        <TableColumn fx:id="colDUni" text="Universidad" prefWidth="160"/>
+
                     </columns>
+
                 </TableView>
+
             </center>
+
             <bottom>
+
                 <VBox spacing="8"><padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+
+                    <Label text="Datos del docente" styleClass="section-title"/>
+
+                    <GridPane hgap="12" vgap="8">
+
+                        <columnConstraints>
+
+                            <ColumnConstraints minWidth="100" prefWidth="110"/>
+
+                            <ColumnConstraints hgrow="ALWAYS"/>
+
+                            <ColumnConstraints minWidth="100" prefWidth="110"/>
+
+                            <ColumnConstraints hgrow="ALWAYS"/>
+
+                        </columnConstraints>
+
+                        <Label text="ID:" style="-fx-font-weight: 600;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+
+                        <TextField fx:id="dId" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                        <Label text="Cédula:" style="-fx-font-weight: 600;" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+
+                        <TextField fx:id="dCedula" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                        <Label text="Nombre:" style="-fx-font-weight: 600;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+                        <TextField fx:id="dNombre" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                        <Label text="Apellido:" style="-fx-font-weight: 600;" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+                        <TextField fx:id="dApellido" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                        <Label text="Universidad:" style="-fx-font-weight: 600;" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+                        <ComboBox fx:id="dUniversidad" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                        <Label text="Programa supervisado:" style="-fx-font-weight: 600;" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+
+                        <TextField fx:id="dPrograma" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+
+                    </GridPane>
+
                     <HBox spacing="8">
-                        <TextField fx:id="dId" promptText="ID" prefWidth="70"/>
-                        <TextField fx:id="dCedula" promptText="Cédula" prefWidth="120"/>
-                        <TextField fx:id="dNombre" promptText="Nombre" prefWidth="120"/>
-                        <TextField fx:id="dApellido" promptText="Apellido" prefWidth="120"/>
+
+                        <Button text="➕ Nuevo" onAction="#onDocNuevo"/>
+
+                        <Button text="💾 Guardar" onAction="#onDocGuardar"/>
+
                     </HBox>
-                    <HBox spacing="8">
-                        <ComboBox fx:id="dUniversidad" prefWidth="260"/>
-                        <TextField fx:id="dPrograma" promptText="Programa que supervisa" prefWidth="220"/>
-                    </HBox>
-                    <HBox spacing="8">
-                        <Button text="Nuevo" onAction="#onDocNuevo"/>
-                        <Button text="Guardar" onAction="#onDocGuardar"/>
-                    </HBox>
+
                     <Label fx:id="msgDocente" wrapText="true"/>
+
                 </VBox>
+
             </bottom>
+
         </BorderPane>
+
     </Tab>
+
     <Tab text="Plan y asignaciones">
+
         <ScrollPane fitToWidth="true">
-            <VBox spacing="10"><padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
-                <Label text="Nuevo plan de prácticas" style="-fx-font-weight: bold;"/>
-                <HBox spacing="8">
-                    <ComboBox fx:id="pDocente" prefWidth="280" promptText="Docente"/>
-                    <ComboBox fx:id="pUniversidad" prefWidth="260" promptText="Universidad"/>
-                    <TextField fx:id="pSemestre" promptText="Etiqueta semestre" prefWidth="200"/>
-                </HBox>
-                <HBox spacing="8">
-                    <Spinner fx:id="pMes" editable="true" prefWidth="90"/>
-                    <Spinner fx:id="pAnio" editable="true" prefWidth="100"/>
-                    <Spinner fx:id="pPeriodo" editable="true" prefWidth="90"/>
-                    <Button text="Crear plan" onAction="#onPlanCrear"/>
-                </HBox>
+
+            <VBox spacing="14"><padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+
+
+
+                <!-- ===== Crear plan ===== -->
+
+                <Label text="Nuevo plan de práctica" styleClass="section-title"/>
+
+                <GridPane hgap="16" vgap="10">
+
+                    <columnConstraints>
+
+                        <ColumnConstraints minWidth="110" prefWidth="120"/>
+
+                        <ColumnConstraints hgrow="ALWAYS"/>
+
+                        <ColumnConstraints minWidth="110" prefWidth="120"/>
+
+                        <ColumnConstraints hgrow="ALWAYS"/>
+
+                    </columnConstraints>
+
+
+
+                    <Label text="Docente:" style="-fx-font-weight: 600;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+
+                    <ComboBox fx:id="pDocente" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+
+
+                    <Label text="Universidad:" style="-fx-font-weight: 600;" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+
+                    <ComboBox fx:id="pUniversidad" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+
+
+                    <Label text="Etiqueta de semestre:" style="-fx-font-weight: 600;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+                    <TextField fx:id="pSemestre" promptText="ej. 2026-1" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+
+
+                    <Label text="Mes / Año / Periodo:" style="-fx-font-weight: 600;" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+                    <HBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="3">
+
+                        <Label text="Mes" style="-fx-text-fill:#64748b; -fx-padding: 6 0 0 0;"/>
+
+                        <Spinner fx:id="pMes" editable="true" prefWidth="80"/>
+
+                        <Label text="Año" style="-fx-text-fill:#64748b; -fx-padding: 6 0 0 0;"/>
+
+                        <Spinner fx:id="pAnio" editable="true" prefWidth="95"/>
+
+                        <Label text="Periodo" style="-fx-text-fill:#64748b; -fx-padding: 6 0 0 0;"/>
+
+                        <Spinner fx:id="pPeriodo" editable="true" prefWidth="80"/>
+
+                        <Button text="Crear plan" onAction="#onPlanCrear" styleClass="button-primary" style="-fx-padding: 6 20;"/>
+
+                    </HBox>
+
+                </GridPane>
+
                 <Label fx:id="msgPlan" wrapText="true"/>
+
+
+
                 <Separator/>
-                <Label text="Asignación al plan seleccionado" style="-fx-font-weight: bold;"/>
-                <ComboBox fx:id="aPlan" prefWidth="420" promptText="Plan"/>
-                <HBox spacing="8">
-                    <ComboBox fx:id="aEstudiante" prefWidth="260" promptText="Estudiante"/>
-                    <ComboBox fx:id="aServicio" prefWidth="200" promptText="Servicio"/>
+
+
+
+                <!-- ===== Agregar asignación ===== -->
+
+                <Label text="Asignación al plan seleccionado" styleClass="section-title"/>
+
+                <GridPane hgap="16" vgap="10">
+
+                    <columnConstraints>
+
+                        <ColumnConstraints minWidth="110" prefWidth="120"/>
+
+                        <ColumnConstraints hgrow="ALWAYS"/>
+
+                        <ColumnConstraints minWidth="110" prefWidth="120"/>
+
+                        <ColumnConstraints hgrow="ALWAYS"/>
+
+                    </columnConstraints>
+
+
+
+                    <Label text="Plan:" style="-fx-font-weight: 600;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+
+                    <ComboBox fx:id="aPlan" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.columnSpan="3"/>
+
+
+
+                    <Label text="Estudiante:" style="-fx-font-weight: 600;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+                    <ComboBox fx:id="aEstudiante" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+
+
+                    <Label text="Servicio hospitalario:" style="-fx-font-weight: 600;" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+                    <ComboBox fx:id="aServicio" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+
+
+                    <Label text="Universidad del estudiante:" style="-fx-font-weight: 600;" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+                    <Label fx:id="lblAUniversidad" style="-fx-text-fill: #0d3b66; -fx-font-weight: 600;" wrapText="true"
+
+                           GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="3"/>
+
+                </GridPane>
+
+
+
+                <VBox spacing="10" styleClass="time-slot-box">
+
+                    <Label text="Franja horaria" style="-fx-font-weight: bold; -fx-text-fill: #0d3b66; -fx-font-size: 13px;"/>
+
+                    <HBox spacing="20" alignment="CENTER_LEFT">
+
+                        <VBox spacing="4">
+
+                            <Label text="Día de la semana (1=Lun, 7=Dom)" style="-fx-text-fill: #475569; -fx-font-size: 12px;"/>
+
+                            <Spinner fx:id="aDia" editable="true" prefWidth="95"/>
+
+                        </VBox>
+
+                        <VBox spacing="4">
+
+                            <Label text="Hora inicio" style="-fx-text-fill: #475569; -fx-font-size: 12px;"/>
+
+                            <ComboBox fx:id="aHoraIni" prefWidth="120"/>
+
+                        </VBox>
+
+                        <VBox spacing="4">
+
+                            <Label text="Hora fin" style="-fx-text-fill: #475569; -fx-font-size: 12px;"/>
+
+                            <ComboBox fx:id="aHoraFin" prefWidth="120"/>
+
+                        </VBox>
+
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+
+                            <Label text="Fecha específica (opcional)" style="-fx-text-fill: #475569; -fx-font-size: 12px;"/>
+
+                            <DatePicker fx:id="aFechaEsp" promptText="Dejar vacío para usar día de la semana"/>
+
+                        </VBox>
+
+                    </HBox>
+
+                </VBox>
+
+
+
+                <HBox>
+
+                    <Button text="+ Agregar asignación" onAction="#onAsignacionGuardar" styleClass="button-primary"/>
+
                 </HBox>
-                <HBox spacing="8">
-                    <Spinner fx:id="aDia" editable="true" prefWidth="80"/>
-                    <TextField fx:id="aHoraIni" promptText="HH:mm inicio" prefWidth="110"/>
-                    <TextField fx:id="aHoraFin" promptText="HH:mm fin" prefWidth="110"/>
-                    <DatePicker fx:id="aFechaEsp" promptText="Fecha específica (opcional)"/>
-                </HBox>
-                <Button text="Agregar asignación" onAction="#onAsignacionGuardar"/>
+
                 <Label fx:id="msgAsignacion" wrapText="true"/>
-                <TableView fx:id="tablaAsignaciones" prefHeight="200">
+
+
+
+                <TableView fx:id="tablaAsignaciones" prefHeight="220">
+
                     <columns>
+
                         <TableColumn fx:id="colAId" text="ID" prefWidth="50"/>
-                        <TableColumn fx:id="colAEst" text="Estudiante" prefWidth="160"/>
-                        <TableColumn fx:id="colASrv" text="Servicio" prefWidth="140"/>
+
+                        <TableColumn fx:id="colAEst" text="Estudiante" prefWidth="200"/>
+
+                        <TableColumn fx:id="colASrv" text="Servicio" prefWidth="170"/>
+
                         <TableColumn fx:id="colADia" text="Día" prefWidth="50"/>
-                        <TableColumn fx:id="colAHi" text="Ini" prefWidth="70"/>
-                        <TableColumn fx:id="colAHf" text="Fin" prefWidth="70"/>
+
+                        <TableColumn fx:id="colAHi" text="Inicio" prefWidth="80"/>
+
+                        <TableColumn fx:id="colAHf" text="Fin" prefWidth="80"/>
+
                     </columns>
+
                 </TableView>
+
             </VBox>
+
         </ScrollPane>
+
     </Tab>
+
 </TabPane>
+
