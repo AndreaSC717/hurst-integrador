@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.husrt.ui.shell.MainShellController" fx:id="root"
+            styleClass="shell-root" prefWidth="1280" prefHeight="720">
+    <left>
+        <VBox styleClass="sidebar" spacing="4">
+            <VBox styleClass="sidebar-logo-wrap" spacing="6">
+                <ImageView fx:id="sidebarLogo" fitWidth="210" preserveRatio="true"
+                           pickOnBounds="true" smooth="true"/>
+                <Label text="HUSRT-Control" styleClass="sidebar-app-name"/>
+            </VBox>
+            <Region styleClass="sidebar-divider" prefHeight="1" maxHeight="1"/>
+            <Button fx:id="navDashboard" text="  Dashboard" onAction="#openDashboard" styleClass="nav-button"/>
+            <Button fx:id="navEstudiantes" text="  Estudiantes" onAction="#openEstudiantes" styleClass="nav-button"/>
+            <Button fx:id="navProfesores" text="  Profesores" onAction="#openProfesores" styleClass="nav-button"/>
+            <Button fx:id="navRotaciones" text="  Rotaciones" onAction="#openRotaciones" styleClass="nav-button"/>
+            <Button fx:id="navPorteria" text="  Control Acceso" onAction="#openPorteria" styleClass="nav-button"/>
+            <Button fx:id="navReportes" text="  Reportes" onAction="#openReportes" styleClass="nav-button"/>
+            <Button fx:id="navCoord" text="  Coordinación" onAction="#openCoordinacion" styleClass="nav-button"/>
+            <Button fx:id="navAdmin" text="  Administración" onAction="#openAdmin" styleClass="nav-button"/>
+            <Button fx:id="navPerfil" text="  Mi perfil" onAction="#openPerfil" styleClass="nav-button"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <VBox styleClass="sidebar-user-box" spacing="4">
+                <Label fx:id="lblSidebarUser" styleClass="sidebar-user-name"/>
+                <Label fx:id="lblSidebarRole" styleClass="sidebar-user-role"/>
+            </VBox>
+            <Button text="Cerrar sesión" onAction="#onLogout" styleClass="button-logout-sidebar"
+                    maxWidth="Infinity"/>
+        </VBox>
+    </left>
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+            <VBox spacing="2">
+                <Label fx:id="lblPageTitle" text="Dashboard Principal" styleClass="topbar-title"/>
+                <Label fx:id="lblPageDate" styleClass="topbar-date"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Cambiar clave" onAction="#openCambioClave" styleClass="button-secondary"/>
+        </HBox>
+    </top>
+    <center>
+        <BorderPane fx:id="contentPane" styleClass="content-area"/>
+    </center>
+</BorderPane>

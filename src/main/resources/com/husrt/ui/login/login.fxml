@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.husrt.ui.login.LoginController"
+           styleClass="login-root" alignment="CENTER">
+    <VBox alignment="CENTER" spacing="20" styleClass="login-card">
+        <ImageView fx:id="logoView" fitWidth="340" preserveRatio="true" styleClass="login-logo"
+                   pickOnBounds="true" smooth="true"/>
+        <Label text="HUSRT-Control" styleClass="login-brand-title"/>
+        <Label text="Sistema de Control de Prácticas" styleClass="login-brand-sub"/>
+        <Label text="Hospital Universitario San Rafael" styleClass="login-hospital-badge"/>
+        <VBox spacing="14" alignment="CENTER" maxWidth="320">
+            <VBox spacing="4" alignment="CENTER_LEFT" maxWidth="300">
+                <Label text="Usuario" style="-fx-text-fill: #475569; -fx-font-size: 12px;"/>
+                <TextField fx:id="usuarioField" promptText="Ingrese su usuario" prefWidth="300" maxWidth="300"/>
+            </VBox>
+            <VBox spacing="4" alignment="CENTER_LEFT" maxWidth="300">
+                <Label text="Contraseña" style="-fx-text-fill: #475569; -fx-font-size: 12px;"/>
+                <PasswordField fx:id="claveField" promptText="Contraseña" prefWidth="300" maxWidth="300"/>
+            </VBox>
+            <Button text="Iniciar sesión" onAction="#onLogin" defaultButton="true"
+                    styleClass="button-primary" prefWidth="300" maxWidth="300"/>
+            <Label fx:id="mensajeLabel" styleClass="message-error" wrapText="true" maxWidth="300"
+                   alignment="CENTER"/>
+            <Separator maxWidth="300"/>
+            <Label text="Acceso rápido de demostración" style="-fx-text-fill: #64748b; -fx-font-size: 11px;"/>
+            <FlowPane hgap="8" vgap="8" alignment="CENTER" prefWrapLength="300">
+                <Button text="Admin" onAction="#onDemoAdmin" styleClass="button-demo"/>
+                <Button text="Coordinador" onAction="#onDemoCoord" styleClass="button-demo"/>
+                <Button text="Portería" onAction="#onDemoPorteria" styleClass="button-demo"/>
+                <Button text="Consulta" onAction="#onDemoConsulta" styleClass="button-demo"/>
+                <Button text="Estudiante" onAction="#onDemoEstudiante" styleClass="button-demo"/>
+            </FlowPane>
+            <Label text="USTA Tunja 2026 — Reto Territorial · Contraseña demo: password"
+                   styleClass="login-footer" wrapText="true" textAlignment="CENTER" maxWidth="300"/>
+        </VBox>
+    </VBox>
+</StackPane>

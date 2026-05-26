@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.husrt.ui.porteria.PorteriaController"
+            fitToWidth="true" styleClass="page-scroll" hbarPolicy="NEVER">
+    <VBox styleClass="page-root" spacing="20">
+        <padding><Insets top="4" right="4" bottom="24" left="4"/></padding>
+        <VBox spacing="4">
+            <Label text="Control de Acceso" styleClass="page-title"/>
+            <Label text="Ingrese la cédula para validar el acceso del estudiante" styleClass="page-subtitle"/>
+        </VBox>
+
+        <HBox spacing="20" alignment="TOP_LEFT">
+            <VBox styleClass="panel-card" spacing="16" prefWidth="420" HBox.hgrow="ALWAYS">
+                <Label text="Estudiante" styleClass="section-title"/>
+                <Label text="Número de cédula" style="-fx-text-fill: #64748b; -fx-font-size: 12px;"/>
+                <TextField fx:id="cedulaEstudiante" promptText="Sin puntos ni espacios" style="-fx-font-size: 16px;"/>
+                <HBox spacing="10">
+                    <Button text="VALIDAR INGRESO" onAction="#onIngresoEstudiante"
+                            styleClass="button-primary" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                    <Button text="Registrar salida" onAction="#onSalidaEstudiante" styleClass="button-secondary"/>
+                </HBox>
+                <Label fx:id="resultadoEstudiante" wrapText="true"/>
+                <HBox spacing="16" alignment="CENTER_LEFT">
+                    <ImageView fx:id="fotoEstudiante" fitWidth="100" fitHeight="100" preserveRatio="true"
+                               visible="false" managed="false"
+                               style="-fx-border-color: #e2e8f0; -fx-border-width: 1; -fx-border-radius: 8;"/>
+                    <Label fx:id="nombreEstudiante" wrapText="true" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                </HBox>
+            </VBox>
+
+            <VBox styleClass="panel-card" spacing="12" prefWidth="380">
+                <Label text="Validaciones recientes" styleClass="section-title"/>
+                <ListView fx:id="listaValidaciones" prefHeight="220"/>
+            </VBox>
+        </HBox>
+
+        <VBox styleClass="panel-card" spacing="12">
+            <Label text="Docente responsable" styleClass="section-title"/>
+            <Label text="Check-in / check-out por plan de prácticas" styleClass="page-subtitle"/>
+            <HBox spacing="12">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Cédula docente" style="-fx-font-size: 12px; -fx-text-fill: #64748b;"/>
+                    <TextField fx:id="cedulaDocente" promptText="Cédula"/>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Plan" style="-fx-font-size: 12px; -fx-text-fill: #64748b;"/>
+                    <ComboBox fx:id="planCombo" prefWidth="280" maxWidth="Infinity"/>
+                </VBox>
+            </HBox>
+            <HBox spacing="10">
+                <Button text="Docente ingreso" onAction="#onDocenteIngreso" styleClass="button-primary"/>
+                <Button text="Docente salida" onAction="#onDocenteSalida" styleClass="button-secondary"/>
+            </HBox>
+            <Label fx:id="resultadoDocente" wrapText="true"/>
+        </VBox>
+    </VBox>
+</ScrollPane>
